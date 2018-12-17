@@ -1,0 +1,10 @@
+$v-app-loading-text: "Loading Wallet Resources...";
+$v-font-size: 15px;
+$v-font-family: 'Helvetica', sans-serif;
+
+@import "../valo/valo.scss";
+
+@mixin wallet {
+    @include valo;
+
+}
