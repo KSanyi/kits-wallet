@@ -18,7 +18,7 @@ import hu.kits.wallet.domain.PurchaseRepository;
 import hu.kits.wallet.infrastructure.db.PurchaseJdbiRepository;
 import hu.kits.wallet.infrastructure.web.HttpServer;
 
-public class Application {
+public class Main {
 
     static {
         LogManager.getLogManager().reset();
