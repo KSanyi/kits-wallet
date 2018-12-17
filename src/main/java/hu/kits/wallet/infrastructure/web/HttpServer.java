@@ -24,7 +24,7 @@ public class HttpServer {
 
     public void start() {
         app.start();
-        logger.info("KIST Wallet started");
+        logger.info("KITS Wallet started");
     }
     
     public void stop() {

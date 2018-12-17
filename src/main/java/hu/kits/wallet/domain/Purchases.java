@@ -41,7 +41,11 @@ public class Purchases {
         List<Entry<String, Long>> list = new ArrayList<>(frequencyMap.entrySet());
         list.sort(Entry.comparingByValue());
         
-        return list.get(list.size()-1).getKey();
+        return list.isEmpty() ? "" : list.get(list.size()-1).getKey();
+    }
+
+    public List<Purchase> entries() {
+        return all;
     }
     
 }

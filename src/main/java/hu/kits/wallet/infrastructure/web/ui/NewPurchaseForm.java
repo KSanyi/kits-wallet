@@ -11,9 +11,11 @@ import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -39,7 +41,9 @@ public class NewPurchaseForm extends VerticalLayout {
     
     private final TextArea commentTextArea = new TextArea("Megjegyzés");
     
-    private final Button button = new Button("Mentés");
+    private final Button saveButton = new Button("Mentés");
+    
+    private final Button cancelButton = new Button("Mégsem");
     
     private final Purchases purchases;
     
@@ -55,7 +59,8 @@ public class NewPurchaseForm extends VerticalLayout {
         
         init();
         
-        button.addClickListener(click -> save());
+        saveButton.addClickListener(click -> save());
+        cancelButton.addClickListener(click -> cancel());
         shopCombo.addValueChangeListener(e -> shopSelected(e.getValue()));
     }
     
@@ -79,10 +84,14 @@ public class NewPurchaseForm extends VerticalLayout {
         if(validate()) {
             saveAction.accept(createPurchase());
             Notification.show("Sikeres mentés");
-            init();
+            ((WalletUI)UI.getCurrent()).showPurchases();
         } else {
             Notification.show("Sikertelen mentés", "Javitsd a hibákat!", Notification.Type.ERROR_MESSAGE);
         }
+    }
+    
+    private void cancel() {
+        ((WalletUI)UI.getCurrent()).showPurchases();
     }
     
     boolean validate() {
@@ -125,14 +134,29 @@ public class NewPurchaseForm extends VerticalLayout {
 
     private void createLayout() {
 
-        addComponents(accountCombo, dateField, amountField, shopCombo, subjectField, categoryCombo, commentTextArea, button);
+        addComponents(accountCombo, dateField, amountField, shopCombo, subjectField, categoryCombo, commentTextArea, new HorizontalLayout(saveButton, cancelButton));
+        
+        accountCombo.addStyleName(ValoTheme.COMBOBOX_HUGE);
+        dateField.addStyleName(ValoTheme.DATEFIELD_HUGE);
+        amountField.addStyleName(ValoTheme.TEXTFIELD_HUGE);
+        shopCombo.addStyleName(ValoTheme.TEXTFIELD_HUGE);
+        subjectField.addStyleName(ValoTheme.TEXTFIELD_HUGE);
+        categoryCombo.addStyleName(ValoTheme.TEXTFIELD_HUGE);
+        commentTextArea.addStyleName(ValoTheme.TEXTAREA_HUGE);
+        
+        dateField.setWidth("250px");
+        shopCombo.setWidth("300px");
+        subjectField.setWidth("300px");
+        categoryCombo.setWidth("300px");
+        commentTextArea.setWidth("300px");
         
         categoryCombo.setEmptySelectionAllowed(false);
         shopCombo.setEmptySelectionAllowed(false);
         
         amountField.addStyleName(ValoTheme.TEXTAREA_ALIGN_RIGHT);
         
-        button.addStyleNames(ValoTheme.BUTTON_PRIMARY);
+        saveButton.addStyleNames(ValoTheme.BUTTON_PRIMARY, ValoTheme.BUTTON_HUGE);
+        cancelButton.addStyleNames(ValoTheme.BUTTON_FRIENDLY, ValoTheme.BUTTON_HUGE);
     }
     
 }

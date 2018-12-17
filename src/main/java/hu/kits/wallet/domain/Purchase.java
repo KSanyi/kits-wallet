@@ -1,6 +1,7 @@
 package hu.kits.wallet.domain;
 
 import java.time.LocalDate;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -43,6 +44,23 @@ public class Purchase {
         
         RESTAURANT, FOOD, SPORT, PRESENT, SERVICE, HOUSEHOLD, CLOTHES, CAR, SOFTWARE, TRAVEL, HEALTH, HARDWARE, OTHER
         
+    }
+
+    public boolean dataContains(String filterText) {
+        
+        String[] filterParts = cleanString(filterText).split(" ");
+        return Stream.of(filterParts).allMatch(filterPart -> 
+            cleanString(category.name()).contains(filterPart) ||
+            cleanString(shop).contains(filterPart) ||
+            cleanString(subject).contains(filterPart) ||
+            cleanString(comment).matches(filterPart));
+    }
+    
+    private static String cleanString(String value) {
+        return value.toLowerCase()
+                .replace("ő", "o").replace("ö", "o").replace("ó", "o")
+                .replace("ű", "u").replace("ü", "u").replace("ú", "u")
+                .replace("á", "a").replace("í", "i").replace("é", "e");
     }
     
 }
