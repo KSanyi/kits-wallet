@@ -1,41 +1,42 @@
 package hu.kits.wallet.infrastructure.web.ui;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-import hu.kits.wallet.domain.Purchase;
+import hu.kits.wallet.domain.DateInterval;
 import hu.kits.wallet.domain.PurchaseRepository;
+import hu.kits.wallet.domain.Purchases;
 
 @SuppressWarnings("serial")
 class PurchasesFilterTable extends VerticalLayout {
 
     private final TextField quickFilter = new TextField("Gyorskereső");
     
+    private final DateFilter dateFilter = new DateFilter();
+    
     private final PurchasesTable table = new PurchasesTable();
     
     private final SummaryBox summaryBox = new SummaryBox();
     
-    private List<Purchase> allItems;
+    private final Purchases allPurchases;
 
     PurchasesFilterTable(PurchaseRepository repository) {
         
-        allItems = repository.loadAll().entries();
-        table.setItems(allItems);
-        summaryBox.setItems(allItems);
+        allPurchases = repository.loadAll();
+        table.setItems(allPurchases.entries());
+        summaryBox.setItems(allPurchases);
         
-        quickFilter.addValueChangeListener(e -> filter(e.getValue()));
+        quickFilter.addValueChangeListener(e -> filter(e.getValue(), dateFilter.getDateInterval()));
+        dateFilter.addValueChangeListener(e -> filter(quickFilter.getValue(), e));
 
         createLayout();
     }
     
     private void createLayout() {
         
-        HorizontalLayout filters = new HorizontalLayout(quickFilter);
+        HorizontalLayout filters = new HorizontalLayout(quickFilter, dateFilter);
         
         HorizontalLayout header = new HorizontalLayout(filters);
         
@@ -48,10 +49,10 @@ class PurchasesFilterTable extends VerticalLayout {
         setMargin(false);
     }
     
-    private void filter(String filterText) {
-        List<Purchase> filteredItems = allItems.stream().filter(p -> p.dataContains(filterText)).collect(Collectors.toList());
-        table.setItems(filteredItems);
-        summaryBox.setItems(filteredItems);
+    private void filter(String filterString, DateInterval dateInterval) {
+        Purchases filteredPurchases = allPurchases.filter(filterString, dateInterval);
+        table.setItems(filteredPurchases.entries());
+        summaryBox.setItems(filteredPurchases);
     }
     
 }

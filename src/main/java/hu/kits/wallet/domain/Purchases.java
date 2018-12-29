@@ -50,6 +50,12 @@ public class Purchases {
         return all;
     }
 
+    public Purchases filter(String filterString, DateInterval dateInterval) {
+        return new Purchases(all.stream()
+                .filter(p -> dateInterval.contains(p.date))
+                .filter(p -> p.dataContains(filterString)).collect(toList()));
+    }
+    
     public int sum() {
         return all.stream().mapToInt(p -> p.amount).sum();
     }
