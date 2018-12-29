@@ -62,11 +62,18 @@ public class NewPurchaseForm extends VerticalLayout {
         saveButton.addClickListener(click -> save());
         cancelButton.addClickListener(click -> cancel());
         shopCombo.addValueChangeListener(e -> shopSelected(e.getValue()));
+        
+        amountField.addFocusListener(e -> UI.getCurrent().addWindow(new AmountWindow(Integer.parseInt(amountField.getValue()), this::amountSet)));
     }
     
     private void shopSelected(String shop) {
         categoryCombo.setValue(purchases.findCategory(shop));
         subjectField.setValue(purchases.findSubject(shop));
+    }
+    
+    private void amountSet(int amount) {
+        amountField.setValue(String.valueOf(amount));
+        shopCombo.focus();
     }
     
     private void init() {
