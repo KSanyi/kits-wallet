@@ -20,6 +20,7 @@ public class AmountWindow extends Window {
         this.action = action;
         
         setSizeFull();
+        setModal(true);
         
         GridLayout layout = new GridLayout(3, 5);
         layout.setSizeFull();
