@@ -62,8 +62,6 @@ public class NewPurchaseForm extends VerticalLayout {
         saveButton.addClickListener(click -> save());
         cancelButton.addClickListener(click -> cancel());
         shopCombo.addValueChangeListener(e -> shopSelected(e.getValue()));
-        
-        amountField.addFocusListener(e -> UI.getCurrent().addWindow(new AmountWindow(Integer.parseInt(amountField.getValue()), this::amountSet)));
     }
     
     private void shopSelected(String shop) {
@@ -141,7 +139,10 @@ public class NewPurchaseForm extends VerticalLayout {
 
     private void createLayout() {
 
-        addComponents(accountCombo, dateField, amountField, shopCombo, subjectField, categoryCombo, commentTextArea, new HorizontalLayout(saveButton, cancelButton));
+        Button button = new Button("X");
+        button.addClickListener(e -> UI.getCurrent().addWindow(new AmountWindow(Integer.parseInt(amountField.getValue()), this::amountSet)));
+        
+        addComponents(accountCombo, dateField, amountField, button, shopCombo, subjectField, categoryCombo, commentTextArea, new HorizontalLayout(saveButton, cancelButton));
         
         accountCombo.addStyleName(ValoTheme.COMBOBOX_HUGE);
         dateField.addStyleName(ValoTheme.DATEFIELD_HUGE);
