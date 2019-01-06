@@ -7,4 +7,50 @@ $v-font-family: 'Helvetica', sans-serif;
 @mixin wallet {
     @include valo;
 
+    .v-button-huge {
+        height: 90px;
+        width: 350px;
+        font-size: 46px
+    }
+    
+    .v-caption-huge {
+        font-size: 30px
+    }
+    
+    .v-textfield-huge {
+        height: 100px;
+        font-size: 70px
+    }
+    
+    .v-filterselect-huge {
+        height: 100px;
+        font-size: 70px
+    }
+    
+    .v-filterselect-huge [class$="button"]:before {
+        width: 70px;
+    }
+    
+    .v-filterselect-huge [class$="button"] {
+        width: 70px;
+    }
+    
+    .v-datefield-huge {
+        height: 100px;
+        font-size: 46px
+    }
+    
+    .v-filterselect-suggestpopup-huge {
+        .gwt-MenuItem {
+            vertical-align: bottom;
+            height: 80px;
+            line-height: 70px;
+          }
+        font-size: 70px;
+    }
+    
+    .v-textarea-huge {
+        font-size: 70px
+    }
+
 }

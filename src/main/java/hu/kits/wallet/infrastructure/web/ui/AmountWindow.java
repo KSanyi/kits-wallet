@@ -35,7 +35,7 @@ public class AmountWindow extends Window {
         }
 
         Button clearButton = new Button("Clear", click -> clearClicked());
-        clearButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        clearButton.addStyleNames(ValoTheme.BUTTON_FRIENDLY, ValoTheme.BUTTON_HUGE);
         clearButton.setSizeFull();
         
         layout.addComponent(clearButton);
@@ -43,7 +43,7 @@ public class AmountWindow extends Window {
         layout.addComponent(new NumberButton(0));
         
         Button doneButton = new Button("Done", click -> doneClicked());
-        doneButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        doneButton.addStyleNames(ValoTheme.BUTTON_PRIMARY, ValoTheme.BUTTON_HUGE);
         
         layout.addComponent(doneButton);
         doneButton.setSizeFull();

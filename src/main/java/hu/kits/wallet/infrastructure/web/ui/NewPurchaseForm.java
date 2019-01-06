@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
+import com.vaadin.server.Page;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button;
@@ -139,9 +140,9 @@ public class NewPurchaseForm extends VerticalLayout {
     private void createLayout() {
 
         Button button = new Button("X");
+        button.addStyleName(ValoTheme.BUTTON_HUGE);
+        button.setWidth("120px");
         button.addClickListener(e -> UI.getCurrent().addWindow(new AmountWindow(Integer.parseInt(amountField.getValue()), this::amountSet)));
-        
-        addComponents(new HorizontalLayout(accountCombo, dateField), shopCombo, subjectField, new HorizontalLayout(amountField, button), categoryCombo, commentTextArea, new HorizontalLayout(saveButton, cancelButton));
         
         accountCombo.addStyleName(ValoTheme.COMBOBOX_HUGE);
         dateField.addStyleName(ValoTheme.DATEFIELD_HUGE);
@@ -151,12 +152,13 @@ public class NewPurchaseForm extends VerticalLayout {
         categoryCombo.addStyleName(ValoTheme.TEXTFIELD_HUGE);
         commentTextArea.addStyleName(ValoTheme.TEXTAREA_HUGE);
         
-        accountCombo.setWidth("140px");
-        dateField.setWidth("230px");
-        shopCombo.setWidth("300px");
-        subjectField.setWidth("300px");
-        categoryCombo.setWidth("300px");
-        commentTextArea.setWidth("400px");
+        amountField.setWidth("300px");
+        accountCombo.setWidth("300px");
+        dateField.setWidth("350px");
+        shopCombo.setWidth("600px");
+        subjectField.setWidth("700px");
+        categoryCombo.setWidth("600px");
+        commentTextArea.setWidth("700px");
         commentTextArea.setRows(3);
         
         categoryCombo.setEmptySelectionAllowed(false);
@@ -166,6 +168,13 @@ public class NewPurchaseForm extends VerticalLayout {
         
         saveButton.addStyleNames(ValoTheme.BUTTON_PRIMARY, ValoTheme.BUTTON_HUGE);
         cancelButton.addStyleNames(ValoTheme.BUTTON_FRIENDLY, ValoTheme.BUTTON_HUGE);
+        
+        if(Page.getCurrent().getWebBrowser().getScreenWidth() >= 1000) {
+            addComponents(new HorizontalLayout(accountCombo, dateField, shopCombo), new HorizontalLayout(subjectField, categoryCombo), new HorizontalLayout(amountField, button, commentTextArea), new HorizontalLayout(saveButton, cancelButton));
+        } else {
+            addComponents(new HorizontalLayout(accountCombo, dateField), shopCombo, subjectField, new HorizontalLayout(amountField, button), categoryCombo, commentTextArea, new HorizontalLayout(saveButton, cancelButton));
+        }
+        
     }
     
 }

@@ -43,7 +43,7 @@ class PurchasesFilterTable extends VerticalLayout {
         addComponents(header, new HorizontalLayout(table, summaryBox));
         
         quickFilter.focus();
-        quickFilter.addStyleName(ValoTheme.TEXTFIELD_HUGE);
+        quickFilter.addStyleName(ValoTheme.TEXTFIELD_LARGE);
         quickFilter.setWidth("300px");
         
         setMargin(false);

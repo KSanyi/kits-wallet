@@ -17,7 +17,7 @@ public class PurchasesScreen extends VerticalLayout {
         button.addStyleNames(ValoTheme.BUTTON_PRIMARY, ValoTheme.BUTTON_HUGE);
         button.addClickListener(click -> ui.newPurchase());
         
-        addComponents(new PurchasesFilterTable(purchaseRepository), button);
+        addComponents(button, new PurchasesFilterTable(purchaseRepository));
         
     }
 
