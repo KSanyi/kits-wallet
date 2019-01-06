@@ -18,7 +18,7 @@ public class WalletUI extends UI {
         String token = request.getParameter("token");
         
         if("364b6227-52b7-4934-9bea-7d9978ecd893".equals(token)) {
-            showPurchases();            
+            newPurchase();            
         }
     }
 

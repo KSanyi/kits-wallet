@@ -141,7 +141,7 @@ public class NewPurchaseForm extends VerticalLayout {
         Button button = new Button("X");
         button.addClickListener(e -> UI.getCurrent().addWindow(new AmountWindow(Integer.parseInt(amountField.getValue()), this::amountSet)));
         
-        addComponents(accountCombo, dateField, shopCombo, subjectField, amountField, button, categoryCombo, commentTextArea, new HorizontalLayout(saveButton, cancelButton));
+        addComponents(new HorizontalLayout(accountCombo, dateField), shopCombo, subjectField, new HorizontalLayout(amountField, button), categoryCombo, commentTextArea, new HorizontalLayout(saveButton, cancelButton));
         
         accountCombo.addStyleName(ValoTheme.COMBOBOX_HUGE);
         dateField.addStyleName(ValoTheme.DATEFIELD_HUGE);
@@ -151,11 +151,13 @@ public class NewPurchaseForm extends VerticalLayout {
         categoryCombo.addStyleName(ValoTheme.TEXTFIELD_HUGE);
         commentTextArea.addStyleName(ValoTheme.TEXTAREA_HUGE);
         
-        dateField.setWidth("250px");
+        accountCombo.setWidth("140px");
+        dateField.setWidth("230px");
         shopCombo.setWidth("300px");
         subjectField.setWidth("300px");
         categoryCombo.setWidth("300px");
-        commentTextArea.setWidth("300px");
+        commentTextArea.setWidth("400px");
+        commentTextArea.setRows(3);
         
         categoryCombo.setEmptySelectionAllowed(false);
         shopCombo.setEmptySelectionAllowed(false);
