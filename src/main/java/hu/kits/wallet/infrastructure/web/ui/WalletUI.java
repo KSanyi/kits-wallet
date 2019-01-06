@@ -14,8 +14,12 @@ public class WalletUI extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
+
+        String token = request.getParameter("token");
         
-        showPurchases();
+        if("364b6227-52b7-4934-9bea-7d9978ecd893".equals(token)) {
+            showPurchases();            
+        }
     }
 
     public void newPurchase() {
