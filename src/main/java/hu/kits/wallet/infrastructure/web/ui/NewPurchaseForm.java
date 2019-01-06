@@ -31,11 +31,11 @@ public class NewPurchaseForm extends VerticalLayout {
     
     private final DateField dateField = new DateField("Dátum");
     
-    private final TextField amountField = new TextField("Összeg");
-    
     private final AppendableCombo shopCombo;
     
     private final TextField subjectField = new TextField("Tárgy");
+    
+    private final TextField amountField = new TextField("Összeg");
     
     private final ComboBox<Purchase.Category> categoryCombo = new ComboBox<>("Kategória", Arrays.asList(Purchase.Category.values()));
     
@@ -57,16 +57,17 @@ public class NewPurchaseForm extends VerticalLayout {
         
         createLayout();
         
-        init();
-        
         saveButton.addClickListener(click -> save());
         cancelButton.addClickListener(click -> cancel());
         shopCombo.addValueChangeListener(e -> shopSelected(e.getValue()));
+        
+        init();
     }
     
     private void shopSelected(String shop) {
         categoryCombo.setValue(purchases.findCategory(shop));
-        subjectField.setValue(purchases.findSubject(shop));
+        subjectField.setValue(purchases.findMostCommonSubjectFor(shop));
+        amountField.setValue(String.valueOf(purchases.findMostCommonAmountFor(shop)));
     }
     
     private void amountSet(int amount) {
@@ -142,7 +143,7 @@ public class NewPurchaseForm extends VerticalLayout {
         Button button = new Button("X");
         button.addClickListener(e -> UI.getCurrent().addWindow(new AmountWindow(Integer.parseInt(amountField.getValue()), this::amountSet)));
         
-        addComponents(accountCombo, dateField, amountField, button, shopCombo, subjectField, categoryCombo, commentTextArea, new HorizontalLayout(saveButton, cancelButton));
+        addComponents(accountCombo, dateField, shopCombo, subjectField, amountField, button, categoryCombo, commentTextArea, new HorizontalLayout(saveButton, cancelButton));
         
         accountCombo.addStyleName(ValoTheme.COMBOBOX_HUGE);
         dateField.addStyleName(ValoTheme.DATEFIELD_HUGE);

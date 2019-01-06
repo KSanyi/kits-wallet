@@ -37,13 +37,22 @@ public class Purchases {
         return all.stream().filter(p -> shop.equals(p.shop)).findAny().map(p -> p.category).orElse(Category.OTHER);
     }
     
-    public String findSubject(String shop) {
+    public String findMostCommonSubjectFor(String shop) {
         
         Map<String , Long> frequencyMap = all.stream().filter(p -> shop.equals(p.shop)).collect(groupingBy(p -> p.subject, counting()));
         List<Entry<String, Long>> list = new ArrayList<>(frequencyMap.entrySet());
         list.sort(Entry.comparingByValue());
         
         return list.isEmpty() ? "" : list.get(list.size()-1).getKey();
+    }
+    
+    public int findMostCommonAmountFor(String shop) {
+        
+        Map<Integer , Long> frequencyMap = all.stream().filter(p -> shop.equals(p.shop)).collect(groupingBy(p -> p.amount, counting()));
+        List<Entry<Integer, Long>> list = new ArrayList<>(frequencyMap.entrySet());
+        list.sort(Entry.comparingByValue());
+        
+        return list.isEmpty() ? 0 : list.get(list.size()-1).getKey();
     }
 
     public List<Purchase> entries() {
