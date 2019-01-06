@@ -21,7 +21,6 @@ import com.vaadin.ui.themes.ValoTheme;
 
 import hu.kits.wallet.domain.Purchase;
 import hu.kits.wallet.domain.Purchase.Account;
-import hu.kits.wallet.domain.Purchase.Category;
 import hu.kits.wallet.domain.Purchases;
 
 @SuppressWarnings("serial")
@@ -78,11 +77,10 @@ public class NewPurchaseForm extends VerticalLayout {
     private void init() {
         accountCombo.setValue(Account.S);
         dateField.setValue(LocalDate.now());
-        amountField.setValue("1000");
-        shopCombo.setValue(purchases.shops().get(0));
         subjectField.clear();
-        categoryCombo.setValue(Category.RESTAURANT);
         commentTextArea.clear();
+        shopCombo.setValue(purchases.shops().get(1));
+        shopCombo.setValue(purchases.shops().get(0));
     }
     
     private void save() {
