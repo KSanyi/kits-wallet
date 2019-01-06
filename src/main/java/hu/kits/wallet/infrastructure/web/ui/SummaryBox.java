@@ -17,6 +17,7 @@ public class SummaryBox extends FormLayout {
         addComponent(createTextField("SUM", purchases.sum()));
         addComponent(createTextField("Current month", purchases.currentMonthSum()));
         addComponent(createTextField("Monthly avg", purchases.monthlyAverage()));
+        addComponent(createTextField("Weekly avg", purchases.weeklyAverage()));
         addComponent(createTextField("Daily avg", purchases.dailyAverage()));
     }
     

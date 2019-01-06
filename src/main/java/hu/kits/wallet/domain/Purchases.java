@@ -70,16 +70,21 @@ public class Purchases {
     }
 
     public int monthlyAverage() {
-        if(all.isEmpty()) return 0;
-        
-        int months = Math.max(1, (int)ChronoUnit.MONTHS.between(firstDate(), lastDate()));
-        return sum() / months;
+        return average(ChronoUnit.MONTHS);
+    }
+    
+    public int weeklyAverage() {
+        return average(ChronoUnit.WEEKS);
     }
 
     public int dailyAverage() {
+        return average(ChronoUnit.DAYS);
+    }
+    
+    private int average(ChronoUnit unit) {
         if(all.isEmpty()) return 0;
         
-        int days = Math.max(1, (int)ChronoUnit.DAYS.between(firstDate(), lastDate()));
+        int days = Math.max(1, (int)unit.between(firstDate(), lastDate()));
         return sum() / days;
     }
     
@@ -95,5 +100,5 @@ public class Purchases {
         LocalDate thisMonth = LocalDate.now().withDayOfMonth(1);
         return all.stream().filter(p -> p.date.withDayOfMonth(1).equals(thisMonth)).mapToInt(p -> p.amount).sum();
     }
-    
+
 }
