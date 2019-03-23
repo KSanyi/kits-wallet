@@ -1,5 +1,6 @@
 package hu.kits.wallet.infrastructure.web.ui;
 
+import com.vaadin.server.Page;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -40,7 +41,11 @@ class PurchasesFilterTable extends VerticalLayout {
         
         HorizontalLayout header = new HorizontalLayout(filters);
         
-        addComponents(header, new HorizontalLayout(table, summaryBox));
+        if(Page.getCurrent().getWebBrowser().getScreenWidth() > 1000) {
+            addComponents(header, new HorizontalLayout(table, summaryBox));
+        } else {
+            addComponents(header, new VerticalLayout(table, summaryBox));
+        }
         
         quickFilter.focus();
         quickFilter.addStyleName(ValoTheme.TEXTFIELD_LARGE);
