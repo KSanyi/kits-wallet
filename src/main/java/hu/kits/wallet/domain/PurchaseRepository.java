@@ -6,4 +6,6 @@ public interface PurchaseRepository {
     
     void create(Purchase purchase);
     
+    void delete(long id);
+    
 }

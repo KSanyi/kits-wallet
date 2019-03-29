@@ -17,7 +17,7 @@ class PurchasesFilterTable extends VerticalLayout {
     
     private final DateFilter dateFilter = new DateFilter();
     
-    private final PurchasesTable table = new PurchasesTable();
+    private final PurchasesTable table;
     
     private final SummaryBox summaryBox = new SummaryBox();
     
@@ -25,6 +25,7 @@ class PurchasesFilterTable extends VerticalLayout {
 
     PurchasesFilterTable(PurchaseRepository repository) {
         
+        table = new PurchasesTable(repository);
         allPurchases = repository.loadAll();
         table.setItems(allPurchases.entries());
         summaryBox.setItems(allPurchases);

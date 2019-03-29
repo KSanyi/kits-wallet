@@ -8,6 +8,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class Purchase {
 
+    public final Long id;
+    
     public final Account account;
     
     public final LocalDate date;
@@ -22,7 +24,8 @@ public class Purchase {
     
     public final String comment;
     
-    public Purchase(Account account, LocalDate date, int amount, Category category, String shop, String subject, String comment) {
+    public Purchase(Long id, Account account, LocalDate date, int amount, Category category, String shop, String subject, String comment) {
+        this.id = id;
         this.account = account;
         this.date = date;
         this.amount = amount;

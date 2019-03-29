@@ -22,6 +22,7 @@ public class PurchaseJdbiRepository implements PurchaseRepository {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     
     private static final String TABLE_PURCHASE = "PURCHASE";
+    private static final String COLUMN_ID = "ID";
     private static final String COLUMN_ACCOUNT = "ACCOUNT";
     private static final String COLUMN_DATE = "DATE";
     private static final String COLUMN_AMOUNT = "AMOUNT";
@@ -48,6 +49,7 @@ public class PurchaseJdbiRepository implements PurchaseRepository {
     private Purchase mapToPurchase(ResultSet rs) throws SQLException {
         
         return new Purchase(
+                rs.getLong(COLUMN_ID),
                 Purchase.Account.valueOf(rs.getString(COLUMN_ACCOUNT)),
                 rs.getDate(COLUMN_DATE).toLocalDate(),
                 rs.getInt(COLUMN_AMOUNT),
@@ -70,6 +72,12 @@ public class PurchaseJdbiRepository implements PurchaseRepository {
         jdbi.withHandle(handle -> JdbiUtil.createInsert(handle, TABLE_PURCHASE, values).execute());
         
         log.info("Purchase saved: {}", purchase);
+    }
+
+    @Override
+    public void delete(long id) {
+        jdbi.withHandle(handle -> handle.execute(String.format("DELETE FROM %s WHERE %s = ?", TABLE_PURCHASE, COLUMN_ID), id));
+        log.info("Purchase with id {} deleted", id);
     }
     
 }

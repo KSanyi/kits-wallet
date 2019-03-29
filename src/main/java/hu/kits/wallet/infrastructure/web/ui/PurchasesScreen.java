@@ -18,7 +18,6 @@ public class PurchasesScreen extends VerticalLayout {
         button.addClickListener(click -> ui.newPurchase());
         
         addComponents(button, new PurchasesFilterTable(purchaseRepository));
-        
     }
 
 }

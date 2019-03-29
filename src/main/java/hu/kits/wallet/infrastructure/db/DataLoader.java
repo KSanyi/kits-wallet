@@ -42,7 +42,8 @@ public class DataLoader {
         String parts[] = line.split("\t");
         
         try {
-            return new Purchase(Account.valueOf(parts[5]),
+            return new Purchase(null,
+                    Account.valueOf(parts[5]),
                     LocalDate.parse(parts[0]),
                     Integer.parseInt(parts[1]),
                     Category.valueOf(parts[2]),

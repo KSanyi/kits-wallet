@@ -134,7 +134,7 @@ public class NewPurchaseForm extends VerticalLayout {
     }
     
     private Purchase createPurchase() {
-        return new Purchase(accountCombo.getValue(), dateField.getValue(), Integer.parseInt(amountField.getValue()), categoryCombo.getValue(), shopCombo.getValue(), subjectField.getValue(), commentTextArea.getValue());
+        return new Purchase(null, accountCombo.getValue(), dateField.getValue(), Integer.parseInt(amountField.getValue()), categoryCombo.getValue(), shopCombo.getValue(), subjectField.getValue(), commentTextArea.getValue());
     }
 
     private void createLayout() {
