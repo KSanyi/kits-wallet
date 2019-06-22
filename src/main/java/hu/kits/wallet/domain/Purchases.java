@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import hu.kits.wallet.domain.Purchase.Account;
 import hu.kits.wallet.domain.Purchase.Category;
 
 public class Purchases {
@@ -37,6 +38,11 @@ public class Purchases {
         return all.stream().filter(p -> shop.equals(p.shop)).findAny().map(p -> p.category).orElse(Category.OTHER);
     }
     
+    public Account finAccount(String shop) {
+        
+        return all.stream().filter(p -> shop.equals(p.shop)).findAny().map(p -> p.account).orElse(Account.S);
+    }
+
     public String findMostCommonSubjectFor(String shop) {
         
         Map<String , Long> frequencyMap = all.stream().filter(p -> shop.equals(p.shop)).collect(groupingBy(p -> p.subject, counting()));
@@ -100,5 +106,5 @@ public class Purchases {
         LocalDate thisMonth = LocalDate.now().withDayOfMonth(1);
         return all.stream().filter(p -> p.date.withDayOfMonth(1).equals(thisMonth)).mapToInt(p -> p.amount).sum();
     }
-
+    
 }

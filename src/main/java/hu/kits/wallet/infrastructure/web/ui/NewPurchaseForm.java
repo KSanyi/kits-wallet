@@ -35,7 +35,7 @@ public class NewPurchaseForm extends VerticalLayout {
     
     private final TextField subjectField = new TextField("Tárgy");
     
-    private final TextField amountField = new TextField("Összeg");
+    private final TextField amountField = new TextField("Összeg (ezer Ft)");
     
     private final ComboBox<Purchase.Category> categoryCombo = new ComboBox<>("Kategória", Arrays.asList(Purchase.Category.values()));
     
@@ -65,9 +65,10 @@ public class NewPurchaseForm extends VerticalLayout {
     }
     
     private void shopSelected(String shop) {
+        accountCombo.setValue(purchases.finAccount(shop));
         categoryCombo.setValue(purchases.findCategory(shop));
         subjectField.setValue(purchases.findMostCommonSubjectFor(shop));
-        amountField.setValue(String.valueOf(purchases.findMostCommonAmountFor(shop)));
+        amountField.setValue(String.valueOf(purchases.findMostCommonAmountFor(shop) / 1000));
     }
     
     private void amountSet(int amount) {
@@ -134,7 +135,10 @@ public class NewPurchaseForm extends VerticalLayout {
     }
     
     private Purchase createPurchase() {
-        return new Purchase(null, accountCombo.getValue(), dateField.getValue(), Integer.parseInt(amountField.getValue()), categoryCombo.getValue(), shopCombo.getValue(), subjectField.getValue(), commentTextArea.getValue());
+        
+        int amount = (int)Double.parseDouble(amountField.getValue()) * 1000;
+        
+        return new Purchase(null, accountCombo.getValue(), dateField.getValue(), amount, categoryCombo.getValue(), shopCombo.getValue(), subjectField.getValue(), commentTextArea.getValue());
     }
 
     private void createLayout() {
@@ -152,7 +156,7 @@ public class NewPurchaseForm extends VerticalLayout {
         categoryCombo.addStyleName(ValoTheme.TEXTFIELD_HUGE);
         commentTextArea.addStyleName(ValoTheme.TEXTAREA_HUGE);
         
-        amountField.setWidth("300px");
+        amountField.setWidth("200px");
         accountCombo.setWidth("300px");
         dateField.setWidth("350px");
         shopCombo.setWidth("600px");
@@ -161,6 +165,7 @@ public class NewPurchaseForm extends VerticalLayout {
         commentTextArea.setWidth("700px");
         commentTextArea.setRows(3);
         
+        accountCombo.setEmptySelectionAllowed(false);
         categoryCombo.setEmptySelectionAllowed(false);
         shopCombo.setEmptySelectionAllowed(false);
         
