@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 
 import hu.kits.wallet.domain.Purchase.Account;
 import hu.kits.wallet.domain.Purchase.Category;
@@ -31,6 +32,11 @@ public class Purchases {
         Collections.reverse(list);
         
         return list.stream().map(Entry::getKey).collect(toList());
+    }
+    
+    public Optional<LocalDate> findLastPurchaseDate(String shop) {
+        
+        return all.stream().filter(p -> shop.equals(p.shop)).map(p -> p.date).sorted().reduce((first, second) -> second);
     }
     
     public Category findCategory(String shop) {
@@ -106,5 +112,5 @@ public class Purchases {
         LocalDate thisMonth = LocalDate.now().withDayOfMonth(1);
         return all.stream().filter(p -> p.date.withDayOfMonth(1).equals(thisMonth)).mapToInt(p -> p.amount).sum();
     }
-    
+
 }

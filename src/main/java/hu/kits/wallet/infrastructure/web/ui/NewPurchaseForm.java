@@ -1,6 +1,7 @@
 package hu.kits.wallet.infrastructure.web.ui;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,6 +14,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
@@ -20,6 +22,7 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+import hu.kits.wallet.common.Clock;
 import hu.kits.wallet.domain.Purchase;
 import hu.kits.wallet.domain.Purchase.Account;
 import hu.kits.wallet.domain.Purchases;
@@ -32,6 +35,8 @@ public class NewPurchaseForm extends VerticalLayout {
     private final DateField dateField = new DateField("Dátum");
     
     private final AppendableCombo shopCombo;
+    
+    private final Label lastPurchaseForShopLabel = new Label();
     
     private final TextField subjectField = new TextField("Tárgy");
     
@@ -65,6 +70,9 @@ public class NewPurchaseForm extends VerticalLayout {
     }
     
     private void shopSelected(String shop) {
+        String lastPurchaseInfo = purchases.findLastPurchaseDate(shop).map(date -> ChronoUnit.DAYS.between(date, Clock.today()) + " napja (" + date + ")").orElse("");
+        
+        lastPurchaseForShopLabel.setValue(lastPurchaseInfo);
         accountCombo.setValue(purchases.finAccount(shop));
         categoryCombo.setValue(purchases.findCategory(shop));
         subjectField.setValue(purchases.findMostCommonSubjectFor(shop));
@@ -96,7 +104,7 @@ public class NewPurchaseForm extends VerticalLayout {
         }
     }
     
-    private void cancel() {
+    private static void cancel() {
         ((WalletUI)UI.getCurrent()).showPurchases();
     }
     
@@ -148,6 +156,8 @@ public class NewPurchaseForm extends VerticalLayout {
         button.setWidth("120px");
         button.addClickListener(e -> UI.getCurrent().addWindow(new AmountWindow(Integer.parseInt(amountField.getValue()), this::amountSet)));
         
+        lastPurchaseForShopLabel.addStyleName(ValoTheme.LABEL_HUGE);
+        
         accountCombo.addStyleName(ValoTheme.COMBOBOX_HUGE);
         dateField.addStyleName(ValoTheme.DATEFIELD_HUGE);
         amountField.addStyleName(ValoTheme.TEXTFIELD_HUGE);
@@ -175,9 +185,9 @@ public class NewPurchaseForm extends VerticalLayout {
         cancelButton.addStyleNames(ValoTheme.BUTTON_FRIENDLY, ValoTheme.BUTTON_HUGE);
         
         if(Page.getCurrent().getWebBrowser().getScreenWidth() >= 1000) {
-            addComponents(new HorizontalLayout(accountCombo, dateField, shopCombo), new HorizontalLayout(subjectField, categoryCombo), new HorizontalLayout(amountField, button, commentTextArea), new HorizontalLayout(saveButton, cancelButton));
+            addComponents(new HorizontalLayout(accountCombo, dateField, shopCombo, lastPurchaseForShopLabel), new HorizontalLayout(subjectField, categoryCombo), new HorizontalLayout(amountField, button, commentTextArea), new HorizontalLayout(saveButton, cancelButton));
         } else {
-            addComponents(new HorizontalLayout(accountCombo, dateField), shopCombo, subjectField, new HorizontalLayout(amountField, button), categoryCombo, commentTextArea, new HorizontalLayout(saveButton, cancelButton));
+            addComponents(new HorizontalLayout(accountCombo, dateField), shopCombo, lastPurchaseForShopLabel, subjectField, new HorizontalLayout(amountField, button), categoryCombo, commentTextArea, new HorizontalLayout(saveButton, cancelButton));
         }
         
     }
