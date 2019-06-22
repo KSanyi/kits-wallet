@@ -2,6 +2,7 @@ package hu.kits.wallet.domain;
 
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.summingInt;
 import static java.util.stream.Collectors.toList;
 
 import java.time.LocalDate;
@@ -18,15 +19,15 @@ import hu.kits.wallet.domain.Purchase.Category;
 
 public class Purchases {
 
-    private final List<Purchase> all;
+    private final List<Purchase> entries;
 
     public Purchases(List<Purchase> purchases) {
-        all = purchases;
+        entries = purchases;
     }
     
     public List<String> shops() {
         
-        Map<String , Long> frequencyMap = all.stream().collect(groupingBy(p -> p.shop, counting()));
+        Map<String , Long> frequencyMap = entries.stream().collect(groupingBy(p -> p.shop, counting()));
         List<Entry<String, Long>> list = new ArrayList<>(frequencyMap.entrySet());
         list.sort(Entry.comparingByValue());
         Collections.reverse(list);
@@ -36,22 +37,22 @@ public class Purchases {
     
     public Optional<LocalDate> findLastPurchaseDate(String shop) {
         
-        return all.stream().filter(p -> shop.equals(p.shop)).map(p -> p.date).sorted().reduce((first, second) -> second);
+        return entries.stream().filter(p -> shop.equals(p.shop)).map(p -> p.date).sorted().reduce((first, second) -> second);
     }
     
     public Category findCategory(String shop) {
         
-        return all.stream().filter(p -> shop.equals(p.shop)).findAny().map(p -> p.category).orElse(Category.OTHER);
+        return entries.stream().filter(p -> shop.equals(p.shop)).findAny().map(p -> p.category).orElse(Category.OTHER);
     }
     
     public Account finAccount(String shop) {
         
-        return all.stream().filter(p -> shop.equals(p.shop)).findAny().map(p -> p.account).orElse(Account.S);
+        return entries.stream().filter(p -> shop.equals(p.shop)).findAny().map(p -> p.account).orElse(Account.S);
     }
 
     public String findMostCommonSubjectFor(String shop) {
         
-        Map<String , Long> frequencyMap = all.stream().filter(p -> shop.equals(p.shop)).collect(groupingBy(p -> p.subject, counting()));
+        Map<String , Long> frequencyMap = entries.stream().filter(p -> shop.equals(p.shop)).collect(groupingBy(p -> p.subject, counting()));
         List<Entry<String, Long>> list = new ArrayList<>(frequencyMap.entrySet());
         list.sort(Entry.comparingByValue());
         
@@ -60,7 +61,7 @@ public class Purchases {
     
     public int findMostCommonAmountFor(String shop) {
         
-        Map<Integer , Long> frequencyMap = all.stream().filter(p -> shop.equals(p.shop)).collect(groupingBy(p -> p.amount, counting()));
+        Map<Integer , Long> frequencyMap = entries.stream().filter(p -> shop.equals(p.shop)).collect(groupingBy(p -> p.amount, counting()));
         List<Entry<Integer, Long>> list = new ArrayList<>(frequencyMap.entrySet());
         list.sort(Entry.comparingByValue());
         
@@ -68,17 +69,17 @@ public class Purchases {
     }
 
     public List<Purchase> entries() {
-        return all;
+        return entries;
     }
 
     public Purchases filter(String filterString, DateInterval dateInterval) {
-        return new Purchases(all.stream()
+        return new Purchases(entries.stream()
                 .filter(p -> dateInterval.contains(p.date))
                 .filter(p -> p.dataContains(filterString)).collect(toList()));
     }
     
     public int sum() {
-        return all.stream().mapToInt(p -> p.amount).sum();
+        return entries.stream().mapToInt(p -> p.amount).sum();
     }
 
     public int monthlyAverage() {
@@ -94,23 +95,28 @@ public class Purchases {
     }
     
     private int average(ChronoUnit unit) {
-        if(all.isEmpty()) return 0;
+        if(entries.isEmpty()) return 0;
         
         int days = Math.max(1, (int)unit.between(firstDate(), lastDate()));
         return sum() / days;
     }
     
     private LocalDate firstDate() {
-        return all.stream().map(p -> p.date).min(LocalDate::compareTo).get();
+        return entries.stream().map(p -> p.date).min(LocalDate::compareTo).get();
     }
     
     private LocalDate lastDate() {
-        return all.stream().map(p -> p.date).max(LocalDate::compareTo).get();
+        return entries.stream().map(p -> p.date).max(LocalDate::compareTo).get();
     }
 
     public int currentMonthSum() {
         LocalDate thisMonth = LocalDate.now().withDayOfMonth(1);
-        return all.stream().filter(p -> p.date.withDayOfMonth(1).equals(thisMonth)).mapToInt(p -> p.amount).sum();
+        return entries.stream().filter(p -> p.date.withDayOfMonth(1).equals(thisMonth)).mapToInt(p -> p.amount).sum();
+    }
+    
+    public Map<Category, Integer> categorySummary() {
+        
+        return entries.stream().collect(groupingBy(p -> p.category, summingInt(p -> p.amount)));
     }
 
 }
