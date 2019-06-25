@@ -20,25 +20,32 @@ import hu.kits.wallet.infrastructure.web.HttpServer;
 
 public class Main {
 
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    
     static {
         LogManager.getLogManager().reset();
         SLF4JBridgeHandler.install();
         java.util.logging.Logger.getLogger("global").setLevel(Level.SEVERE);
     }
     
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    public static final PurchaseRepository purchaseRepository;
+    
+    static {
+        try {
+            URI dbUri = getDatabaseUri();
+            DataSource dataSource = createDataSource(dbUri);
+            purchaseRepository = new PurchaseJdbiRepository(dataSource);
+        } catch(Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
     
     public static void main(String[] args) throws Exception {
-
         int port = getPort();
 
-        URI dbUri = getDatabaseUri();
-        
-        DataSource dataSource = createDataSource(dbUri);
-        
-        PurchaseRepository purchaseRepository = new PurchaseJdbiRepository(dataSource);
-        
-        new HttpServer(port, purchaseRepository).start();;
+        HttpServer server = new HttpServer(port);
+        server.start();
+        server.join();
     }
     
     private static int getPort() {

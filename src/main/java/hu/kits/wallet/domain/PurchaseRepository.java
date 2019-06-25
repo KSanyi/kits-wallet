@@ -4,7 +4,7 @@ public interface PurchaseRepository {
 
     Purchases loadAll();
     
-    void create(Purchase purchase);
+    void updateOrCreate(Purchase purchase);
     
     void delete(long id);
     

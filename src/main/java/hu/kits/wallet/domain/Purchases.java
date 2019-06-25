@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -22,7 +23,9 @@ public class Purchases {
     private final List<Purchase> entries;
 
     public Purchases(List<Purchase> purchases) {
-        entries = purchases;
+        entries = purchases.stream()
+                .sorted(Comparator.comparing((Purchase p) -> p.date).reversed())
+                .collect(toList());
     }
     
     public List<String> shops() {
@@ -117,6 +120,11 @@ public class Purchases {
     public Map<Category, Integer> categorySummary() {
         
         return entries.stream().collect(groupingBy(p -> p.category, summingInt(p -> p.amount)));
+    }
+
+    public Optional<Purchase> find(long id) {
+        
+        return entries.stream().filter(e -> e.id == id).findFirst();
     }
 
 }

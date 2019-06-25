@@ -46,7 +46,7 @@ public class PurchaseJdbiRepository implements PurchaseRepository {
         return new Purchases(purchaseList);
     }
     
-    private Purchase mapToPurchase(ResultSet rs) throws SQLException {
+    private static Purchase mapToPurchase(ResultSet rs) throws SQLException {
         
         return new Purchase(
                 rs.getLong(COLUMN_ID),
@@ -78,6 +78,14 @@ public class PurchaseJdbiRepository implements PurchaseRepository {
     public void delete(long id) {
         jdbi.withHandle(handle -> handle.execute(String.format("DELETE FROM %s WHERE %s = ?", TABLE_PURCHASE, COLUMN_ID), id));
         log.info("Purchase with id {} deleted", id);
+    }
+
+    @Override
+    public void updateOrCreate(Purchase purchase) {
+        if(purchase.id != null) {
+            delete(purchase.id);
+        }
+        create(purchase);
     }
     
 }

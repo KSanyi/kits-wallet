@@ -8,53 +8,54 @@ import static java.util.stream.Collectors.toList;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Consumer;
 
-import com.vaadin.ui.Button;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.ValoTheme;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
+import hu.kits.wallet.common.Clock;
 import hu.kits.wallet.domain.DateInterval;
 
-@SuppressWarnings("serial")
 public class DateFilter extends HorizontalLayout {
 
     private final List<Consumer<DateInterval>> listeners = new ArrayList<>();
     
-    private final Button thisMonthButton = new Button("This month", click -> thisMonthSelected());
-    private final Button thisYearButton = new Button("This year", click -> thisYearSelected());
-    private final ComboBox<LocalDate> monthCombo = new ComboBox<>("Hónap");
+    private final Button thisMonthButton = new Button(Clock.today().getMonth().name(), click -> thisMonthSelected());
+    private final Button thisYearButton = new Button(String.valueOf(Clock.today().getYear()), click -> thisYearSelected());
+    private final ComboBox<LocalDate> monthCombo = new ComboBox<>();
     
-    private final DateField fromDateField = new DateField("");
-    private final DateField toDateField = new DateField("");
+    private final DatePicker fromDateField = new DatePicker("");
+    private final DatePicker toDateField = new DatePicker("");
     
     DateFilter() {
         
-        thisMonthButton.addStyleName(ValoTheme.BUTTON_LINK);
-        thisYearButton.addStyleName(ValoTheme.BUTTON_LINK);
         fromDateField.addValueChangeListener(e -> listeners.stream().forEach(l -> l.accept(getDateInterval())));
-        fromDateField.setWidth("140px");
-        fromDateField.setDateFormat("yyyy.MM.dd");
+        fromDateField.setLocale(new Locale("HU"));
+        fromDateField.setWidth("160px");
         toDateField.addValueChangeListener(e -> listeners.stream().forEach(l -> l.accept(getDateInterval())));
-        toDateField.setWidth("140px");
-        toDateField.setDateFormat("yyyy.MM.dd");
+        toDateField.setLocale(new Locale("HU"));
+        toDateField.setWidth("160px");
         
-        monthCombo.setItemCaptionGenerator(d -> d.getYear() + " " + d.getMonth().toString().toLowerCase());
-        monthCombo.setWidth("160px");
+        monthCombo.setPlaceholder("Hónap");
+        monthCombo.setItemLabelGenerator(d -> d.getYear() + " " + d.getMonth().toString().toLowerCase());
         monthCombo.setItems(createMonths());
         monthCombo.addValueChangeListener(e -> monthSelected(e.getValue()));
         
-        VerticalLayout buttonsLayout = new VerticalLayout(thisMonthButton, thisYearButton);
-        buttonsLayout.setMargin(false);
-        buttonsLayout.setSpacing(false);
+        //VerticalLayout buttonsBar = new VerticalLayout(thisMonthButton, thisYearButton);
+        //buttonsBar.setMargin(false);
+        //buttonsBar.setSpacing(false);
         
-        addComponents(fromDateField, toDateField, monthCombo, buttonsLayout);
+        thisMonthButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        thisYearButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        
+        add(fromDateField, toDateField, monthCombo, thisMonthButton, thisYearButton);
     }
 
-    private List<LocalDate> createMonths() {
+    private static List<LocalDate> createMonths() {
         LocalDate start = LocalDate.of(2018,7,1);
         return start.datesUntil(today(), ofMonths(1))
                 .sorted(reverseOrder())
