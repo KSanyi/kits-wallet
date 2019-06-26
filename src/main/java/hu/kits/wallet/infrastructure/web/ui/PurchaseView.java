@@ -51,7 +51,7 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
     
     private Long purchaseId;
     
-    private final Binder<PurchaseData> binder = new Binder<>(PurchaseData.class);;
+    private final Binder<PurchaseData> binder = new Binder<>(PurchaseData.class);
 
     public PurchaseView() {
         
@@ -67,7 +67,6 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
     }
     
     private void setupBinder() {
-        Binder<PurchaseData> binder = new Binder<>(PurchaseData.class);
         binder.forField(dateField).asRequired("Nem lehet üres").bind("date");
         binder.forField(shopCombo).asRequired("Nem lehet üres").bind("shop");
         binder.forField(subjectField).asRequired("Nem lehet üres").bind("subject");
