@@ -19,7 +19,8 @@ public class PucrhasesGrid extends Grid<Purchase> {
             .setHeader("Dátum")
             .setWidth("120px")
             .setFlexGrow(0)
-            .setSortable(true);
+            .setSortable(true)
+            .setFrozen(true);
         
         addColumn(new AmountRenderer<>(p -> p.amount))
             .setHeader("Összeg")

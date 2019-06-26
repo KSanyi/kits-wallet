@@ -33,6 +33,8 @@ public class DateFilter extends HorizontalLayout {
     
     DateFilter() {
         
+        addClassName("date-filter");
+        
         fromDateField.addValueChangeListener(e -> listeners.stream().forEach(l -> l.accept(getDateInterval())));
         fromDateField.setLocale(new Locale("HU"));
         fromDateField.setWidth("160px");

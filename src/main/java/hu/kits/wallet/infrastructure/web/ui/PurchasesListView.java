@@ -5,7 +5,6 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -23,7 +22,6 @@ public class PurchasesListView extends VerticalLayout {
 
     private final TextField searchField = new TextField("", "Szűrés");
     private final DateFilter dateFilter = new DateFilter();
-    private final H2 header = new H2("Vásárlások");
     private final PucrhasesGrid grid = new PucrhasesGrid();
 
     //private final CategoryEditorDialog form = new CategoryEditorDialog(this::saveCategory, this::deleteCategory);
@@ -64,7 +62,6 @@ public class PurchasesListView extends VerticalLayout {
     private Button createNewPurchaseButton() {
         Button newPurchaseButton = new Button("Vásárlás", new Icon("lumo", "plus"));
         newPurchaseButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        newPurchaseButton.addClassName("view-toolbar__button");
         newPurchaseButton.addClickListener(click -> getUI().ifPresent(ui -> ui.navigate(PurchaseView.class)));
         
         /*
@@ -81,19 +78,15 @@ public class PurchasesListView extends VerticalLayout {
     private Component createContent() {
         VerticalLayout container = new VerticalLayout();
         container.setClassName("view-container");
-        //container.setMargin(false);
         container.setAlignItems(Alignment.STRETCH);
 
-        container.add(header, grid);
+        container.add(grid);
         return container;
     }
 
     private void updateView() {
         Purchases purchases = purchaseRepository().loadAll();
         grid.setItems(purchases.filter(searchField.getValue(), dateFilter.getDateInterval()).entries());
-
-        String headerText = searchField.isEmpty() ? "Vásárlások" : "Szűrés: “" + searchField.getValue() + "”"; 
-        header.setText(headerText);
     }
 
 }
