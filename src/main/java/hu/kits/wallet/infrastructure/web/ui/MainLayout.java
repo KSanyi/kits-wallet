@@ -9,7 +9,7 @@ import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.server.PageConfigurator;
 
 @HtmlImport("frontend://styles/shared-styles.html")
-@PWA(name = "KITS Purchases", shortName = "KITS-P")
+@PWA(name = "KITS Purchases", shortName = "KITS-P", startPath="/purchase")
 @Viewport("width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes")
 public class MainLayout extends Div implements RouterLayout, PageConfigurator {
 
