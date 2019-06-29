@@ -1,6 +1,8 @@
 package hu.kits.wallet.infrastructure.web.ui;
 
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -60,6 +62,13 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
 
         shopCombo.setItems(purchases.shops());
         shopCombo.addValueChangeListener(e -> shopSelected(e.getValue()));
+        shopCombo.setAllowCustomValue(true);
+        shopCombo.addCustomValueSetListener(e -> {
+            List<String> shops = new ArrayList<>(purchases.shops());
+            shops.add(e.getDetail());
+            shopCombo.setItems(shops);
+            shopCombo.setValue(e.getDetail());
+        });
         
         accountCombo.setValue(Account.KITS);
         
@@ -98,7 +107,11 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
     }
     
     private void shopSelected(String shop) {
+        if(shop == null) return;
+        
         String lastPurchaseInfo = purchases.findLastPurchaseDate(shop).map(date -> ChronoUnit.DAYS.between(date, Clock.today()) + " napja (" + date + ")").orElse("");
+        
+        if(lastPurchaseInfo.isBlank()) return;
         
         lastPurchaseForShopLabel.setText(lastPurchaseInfo);
         accountCombo.setValue(purchases.finAccount(shop));
