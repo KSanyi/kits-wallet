@@ -39,8 +39,11 @@ public class Purchases {
     }
     
     public Optional<LocalDate> findLastPurchaseDate(String shop) {
-        
-        return entries.stream().filter(p -> shop.equals(p.shop)).map(p -> p.date).sorted().reduce((first, second) -> second);
+        if(shop != null) {
+            return entries.stream().filter(p -> shop.equals(p.shop)).map(p -> p.date).sorted().reduce((first, second) -> second);
+        } else {
+            return Optional.empty();
+        }
     }
     
     public Category findCategory(String shop) {

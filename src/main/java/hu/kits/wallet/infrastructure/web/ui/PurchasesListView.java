@@ -6,6 +6,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
@@ -23,6 +24,7 @@ public class PurchasesListView extends VerticalLayout {
     private final TextField searchField = new TextField("", "Szűrés");
     private final DateFilter dateFilter = new DateFilter();
     private final PucrhasesGrid grid = new PucrhasesGrid();
+    private final SummaryBox summaryBox = new SummaryBox();
 
     //private final CategoryEditorDialog form = new CategoryEditorDialog(this::saveCategory, this::deleteCategory);
 
@@ -53,6 +55,7 @@ public class PurchasesListView extends VerticalLayout {
         searchField.addValueChangeListener(e -> updateView());
         searchField.setValueChangeMode(ValueChangeMode.EAGER);
 
+        dateFilter.addClassName("nomobile");
         dateFilter.addValueChangeListener(e -> updateView());
         
         viewToolbar.add(searchField, dateFilter, createNewPurchaseButton());
@@ -76,17 +79,25 @@ public class PurchasesListView extends VerticalLayout {
     }
 
     private Component createContent() {
-        VerticalLayout container = new VerticalLayout();
+        HorizontalLayout container = new HorizontalLayout();
         container.setClassName("view-container");
-        container.setAlignItems(Alignment.STRETCH);
 
-        container.add(grid);
+        summaryBox.setMinWidth("250px");
+        summaryBox.addClassName("nomobile");
+        
+        VerticalLayout gridHolder = new VerticalLayout(grid);
+        gridHolder.setMargin(false);
+        gridHolder.setPadding(false);
+        
+        container.add(summaryBox, gridHolder);
         return container;
     }
 
     private void updateView() {
-        Purchases purchases = purchaseRepository().loadAll();
-        grid.setItems(purchases.filter(searchField.getValue(), dateFilter.getDateInterval()).entries());
+        Purchases allPurchases = purchaseRepository().loadAll();
+        Purchases filteredPurchases = allPurchases.filter(searchField.getValue(), dateFilter.getDateInterval());
+        grid.setItems(filteredPurchases.entries());
+        summaryBox.setItems(filteredPurchases);
     }
 
 }

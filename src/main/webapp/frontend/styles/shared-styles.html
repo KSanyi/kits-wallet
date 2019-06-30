@@ -4,6 +4,13 @@
 <dom-module id="view-styles">
     <template>
         <style>
+        
+            @media screen and (max-width: 480px) {
+    
+            .nomobile {
+                display:none;
+            }
+}
             /* Stretch to fill the entire browser viewport while keeping the content constrained to m parent element max-width */
 
             .view-toolbar {
@@ -54,7 +61,7 @@
             width: 100%;
             height: 100%;
             min-height: 100vh;
-            max-width: 1260px;
+            max-width: 1460px;
             margin: 0 auto;
         }
 

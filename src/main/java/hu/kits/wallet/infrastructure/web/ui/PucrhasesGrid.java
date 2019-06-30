@@ -1,11 +1,7 @@
 package hu.kits.wallet.infrastructure.web.ui;
 
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import hu.kits.wallet.common.Formatters;
 import hu.kits.wallet.domain.Purchase;
@@ -50,20 +46,7 @@ public class PucrhasesGrid extends Grid<Purchase> {
             .setWidth("80px")
             .setFlexGrow(0);
         
-        addColumn(new ComponentRenderer<>(this::createEditButton))
-            .setFlexGrow(0);
-        
-        setSelectionMode(SelectionMode.NONE);
-        
-        // sort
-    }
-    
-    private Button createEditButton(Purchase purchase) {
-        Button edit = new Button("Szer", click -> getUI().ifPresent(ui -> ui.navigate(PurchaseView.class, purchase.id)));
-        edit.setIcon(new Icon("lumo", "edit"));
-        edit.addClassName("review__edit");
-        edit.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        return edit;
+        addSelectionListener(e -> getUI().ifPresent(ui -> e.getFirstSelectedItem().ifPresent(item -> ui.navigate(PurchaseView.class, item.id))));
     }
 
 }
