@@ -38,6 +38,10 @@ public class Purchases {
         return list.stream().map(Entry::getKey).collect(toList());
     }
     
+    public List<String> subjects() {
+        return entries.stream().map(e -> e.subject).distinct().sorted().collect(toList());
+    }
+    
     public Optional<LocalDate> findLastPurchaseDate(String shop) {
         if(shop != null) {
             return entries.stream().filter(p -> shop.equals(p.shop)).map(p -> p.date).sorted().reduce((first, second) -> second);

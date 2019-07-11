@@ -15,7 +15,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
@@ -36,7 +35,7 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
 
     private final DatePicker dateField = new DatePicker("Dátum", Clock.today());
     private final ComboBox<String> shopCombo = new ComboBox<>("Bolt");
-    private final TextField subjectField = new TextField("Tárgy");
+    private final ComboBox<String> subjectCombo = new ComboBox<>("Tárgy");
     private final ComboBox<Category> categoryCombo = new ComboBox<>("Kategória", Category.values());
     private final ComboBox<Account> accountCombo = new ComboBox<>("Account", Account.values());
     private final NumberField amountField = new NumberField("Összeg");
@@ -68,6 +67,15 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
             }
         });
         
+        subjectCombo.setItems(purchases.subjects());
+        
+        subjectCombo.setAllowCustomValue(true);
+        subjectCombo.addCustomValueSetListener(e -> {
+            if(subjectCombo.getValue() == null) {
+                subjectCombo.setValue(e.getDetail());
+            }
+        });
+        
         accountCombo.setValue(Account.KITS);
         
         setupBinder();
@@ -76,7 +84,7 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
     private void setupBinder() {
         binder.forField(dateField).asRequired("Nem lehet üres").bind("date");
         binder.forField(shopCombo).asRequired("Nem lehet üres").bind("shop");
-        binder.forField(subjectField).asRequired("Nem lehet üres").bind("subject");
+        binder.forField(subjectCombo).asRequired("Nem lehet üres").bind("subject");
         binder.forField(categoryCombo).asRequired("Nem lehet üres").bind("category");
         binder.forField(accountCombo).asRequired("Nem lehet üres").bind("account");
         binder.forField(amountField).asRequired("Nem lehet üres").bind("amount");
@@ -114,7 +122,7 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
         lastPurchaseForShopLabel.setText(lastPurchaseInfo);
         accountCombo.setValue(purchases.finAccount(shop));
         categoryCombo.setValue(purchases.findCategory(shop));
-        subjectField.setValue(purchases.findMostCommonSubjectFor(shop));
+        subjectCombo.setValue(purchases.findMostCommonSubjectFor(shop));
         amountField.setValue((double)purchases.findMostCommonAmountFor(shop));
     }
     
@@ -129,6 +137,7 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
         amountField.setPattern("[0-9]*");
         amountField.setPreventInvalidInput(true);
         amountField.setSuffixComponent(new Span("Ft"));
+        amountField.setClearButtonVisible(true);
         
         saveButton.setIcon(new Icon("lumo", "checkmark"));
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -140,7 +149,7 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
         deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
         deleteButton.setVisible(false);
         
-        add(dateField, shopCombo, lastPurchaseForShopLabel, subjectField, categoryCombo, accountCombo, amountField, commentField,
+        add(dateField, shopCombo, lastPurchaseForShopLabel, subjectCombo, categoryCombo, accountCombo, amountField, commentField,
                 new HorizontalLayout(saveButton, cancelButton, deleteButton));
     }
 
