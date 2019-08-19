@@ -28,18 +28,24 @@ public class Purchases {
                 .collect(toList());
     }
     
-    public List<String> shops() {
+    public List<String> commonShops() {
         
         Map<String , Long> frequencyMap = entries.stream().collect(groupingBy(p -> p.shop, counting()));
-        List<Entry<String, Long>> list = new ArrayList<>(frequencyMap.entrySet());
+        List<Entry<String, Long>> list = new ArrayList<>(frequencyMap.entrySet().stream().filter(e -> e.getValue() > 5).collect(toList()));
         list.sort(Entry.comparingByValue());
         Collections.reverse(list);
         
         return list.stream().map(Entry::getKey).collect(toList());
     }
     
-    public List<String> subjects() {
-        return entries.stream().map(e -> e.subject).distinct().sorted().collect(toList());
+    public List<String> commonSubjects() {
+        
+        Map<String , Long> frequencyMap = entries.stream().collect(groupingBy(p -> p.subject, counting()));
+        List<Entry<String, Long>> list = new ArrayList<>(frequencyMap.entrySet().stream().filter(e -> e.getValue() > 5).collect(toList()));
+        list.sort(Entry.comparingByValue());
+        Collections.reverse(list);
+        
+        return list.stream().map(Entry::getKey).collect(toList());
     }
     
     public Optional<LocalDate> findLastPurchaseDate(String shop) {

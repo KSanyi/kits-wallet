@@ -11,7 +11,6 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
@@ -43,6 +42,7 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
     private final Div lastPurchaseForShopLabel = new Div();
     
     private final Button saveButton = new Button("Mentés", click -> save());
+    private final Button duplicateButton = new Button("Másolás", click -> duplicate());
     private final Button cancelButton = new Button("Mégsem", click -> cancel());
     private final Button deleteButton = new Button("Törlés", click -> delete());
     
@@ -57,7 +57,7 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
         purchases = purchaseRepository().loadAll();
         initView();
 
-        shopCombo.setItems(purchases.shops());
+        shopCombo.setItems(purchases.commonShops());
         shopCombo.addValueChangeListener(e -> shopSelected(e.getValue()));
         
         shopCombo.setAllowCustomValue(true);
@@ -67,7 +67,7 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
             }
         });
         
-        subjectCombo.setItems(purchases.subjects());
+        subjectCombo.setItems(purchases.commonSubjects());
         
         subjectCombo.setAllowCustomValue(true);
         subjectCombo.addCustomValueSetListener(e -> {
@@ -76,7 +76,7 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
             }
         });
         
-        accountCombo.setValue(Account.KITS);
+        accountCombo.setValue(Account.S);
         
         setupBinder();
     }
@@ -95,6 +95,18 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
         PurchaseData purchaseData = new PurchaseData();
         if(binder.writeBeanIfValid(purchaseData)) {
             purchaseRepository().updateOrCreate(purchaseData.toPurchase(purchaseId));
+            Notification.show("Vásárlás mentve", 3000, Position.MIDDLE);
+            getUI().ifPresent(ui -> ui.navigate("")); 
+        } else {
+            Notification.show("Javítsd a hibákat", 3000, Position.MIDDLE);
+        }
+    }
+    
+    private void duplicate() {
+        PurchaseData purchaseData = new PurchaseData();
+        if(binder.writeBeanIfValid(purchaseData)) {
+            purchaseData.setDate(Clock.today());
+            purchaseRepository().updateOrCreate(purchaseData.toPurchase(null));
             Notification.show("Vásárlás mentve", 3000, Position.MIDDLE);
             getUI().ifPresent(ui -> ui.navigate("")); 
         } else {
@@ -138,6 +150,7 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
         amountField.setPreventInvalidInput(true);
         amountField.setSuffixComponent(new Span("Ft"));
         amountField.setClearButtonVisible(true);
+        amountField.addFocusListener(e -> amountField.clear());
         
         saveButton.setIcon(new Icon("lumo", "checkmark"));
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -145,12 +158,16 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
         cancelButton.setIcon(new Icon("lumo", "cross"));
         cancelButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
         
+        duplicateButton.setIcon(new Icon("lumo", "reload"));
+        duplicateButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+        duplicateButton.setVisible(false);
+        
         deleteButton.setIcon(new Icon("lumo", "cross"));
         deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
         deleteButton.setVisible(false);
         
-        add(dateField, shopCombo, lastPurchaseForShopLabel, subjectCombo, categoryCombo, accountCombo, amountField, commentField,
-                new HorizontalLayout(saveButton, cancelButton, deleteButton));
+        add(cancelButton, dateField, shopCombo, lastPurchaseForShopLabel, subjectCombo, categoryCombo, accountCombo, amountField, commentField, 
+                saveButton, duplicateButton, deleteButton);
     }
 
     @Override
@@ -158,6 +175,7 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
         if(parameter != null) {
             purchaseId = parameter;
             deleteButton.setVisible(true);
+            duplicateButton.setVisible(true);
             purchaseRepository().loadAll()
                 .find(parameter)
                 .ifPresentOrElse(p -> binder.readBean(new PurchaseData(p)),
