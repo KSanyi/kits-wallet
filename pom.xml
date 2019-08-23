@@ -19,6 +19,8 @@
 
         <vaadin.version>14.0.1</vaadin.version>
         <vaadin-install-nodejs>true</vaadin-install-nodejs>
+        <frontend-maven-plugin.nodeVersion>v10.16.0</frontend-maven-plugin.nodeVersion>
+        <frontend-maven-plugin.npmVersion>6.9.0</frontend-maven-plugin.npmVersion>
         <jetty.version>9.4.17.v20190418</jetty.version>
     </properties>
 
