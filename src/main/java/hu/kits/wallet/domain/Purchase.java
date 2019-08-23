@@ -56,7 +56,7 @@ public class Purchase {
             cleanString(category.name()).contains(filterPart) ||
             cleanString(shop).contains(filterPart) ||
             cleanString(subject).contains(filterPart) ||
-            cleanString(comment).matches(filterPart));
+            cleanString(comment).contains(filterPart));
     }
     
     private static String cleanString(String value) {
