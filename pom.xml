@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>hu.bankmonitor</groupId>
@@ -14,11 +16,12 @@
         <java.version>12</java.version>
         <maven.compiler.source>12</maven.compiler.source>
         <maven.compiler.target>12</maven.compiler.target>
-        
+
         <vaadin.version>14.0.1</vaadin.version>
+        <vaadin-install-nodejs>true</vaadin-install-nodejs>
         <jetty.version>9.4.17.v20190418</jetty.version>
     </properties>
-    
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -36,8 +39,9 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-core</artifactId>
-			<exclusions>
-                <!-- Webjars are only needed when running in Vaadin 13 compatibility mode -->
+            <exclusions>
+                <!-- Webjars are only needed when running in Vaadin 13 compatibility 
+                    mode -->
                 <exclusion>
                     <groupId>com.vaadin.webjar</groupId>
                     <artifactId>*</artifactId>
@@ -63,7 +67,7 @@
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency> 
+        </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -76,13 +80,13 @@
             <artifactId>jdbi3-core</artifactId>
             <version>3.3.0</version>
         </dependency>
-        
+
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.12</version>
         </dependency>
-            
+
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
@@ -98,7 +102,7 @@
             <artifactId>jul-to-slf4j</artifactId>
             <version>1.7.25</version>
         </dependency>
-            
+
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
@@ -124,7 +128,7 @@
             <artifactId>javax-websocket-server-impl</artifactId>
             <version>${jetty.version}</version>
         </dependency>
-                    
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
@@ -144,7 +148,7 @@
             <version>1.4.196</version>
             <scope>test</scope>
         </dependency>
-        
+
     </dependencies>
 
     <build>
@@ -159,7 +163,7 @@
             </resource>
         </resources>
         <plugins>
-			<plugin>
+            <plugin>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-maven-plugin</artifactId>
                 <version>${vaadin.version}</version>
@@ -183,7 +187,8 @@
                         </goals>
                         <configuration>
                             <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <transformer
+                                    implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>hu.kits.wallet.Main</mainClass>
                                 </transformer>
                             </transformers>
@@ -199,5 +204,56 @@
         </plugins>
         <finalName>app</finalName>
     </build>
+
+    <profiles>
+        <profile>
+            <id>vaadin-install-nodejs</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <property>
+                    <name>vaadin-install-nodejs</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.vaadin</groupId>
+                        <artifactId>vaadin-maven-plugin</artifactId>
+                        <version>${vaadin.version}</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>prepare-frontend</goal>
+                                    <goal>build-frontend</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <!-- optional: you don't really need execution ids, but it looks nice in your build log. -->
+                                <id>install node and npm</id>
+                                <goals>
+                                    <goal>install-node-and-npm</goal>
+                                </goals>
+                                <!-- optional: default phase is "generate-resources" -->
+                                <phase>generate-resources</phase>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <nodeVersion>${frontend-maven-plugin.nodeVersion}</nodeVersion>
+                            <!-- optional: with node version greater than 4.0.0 will use npm provided by node distribution -->
+                            <npmVersion>${frontend-maven-plugin.npmVersion}</npmVersion>
+                            <!-- optional: where to download node and npm from. Defaults to https://nodejs.org/dist/ -->
+                            <!-- <downloadRoot>http://myproxy.example.org/nodejs/</downloadRoot> -->
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
