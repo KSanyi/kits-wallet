@@ -1,0 +1,22 @@
+.main-layout {
+    flex-direction: row;
+}
+
+@media (max-width: 500px) {
+
+    .main-layout {
+        flex-direction: column;
+        --top-bar-height: 50px;
+        --top-bar-margin: 5vw;
+    }
+
+    .summary-box {
+        display: none;
+    }
+    
+    .date-filter {
+        display: none;
+    }
+
+}
+

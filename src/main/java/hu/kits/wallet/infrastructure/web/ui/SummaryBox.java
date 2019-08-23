@@ -6,24 +6,28 @@ import static java.util.stream.Collectors.toList;
 import java.util.Comparator;
 import java.util.List;
 
-import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.grid.Grid.SelectionMode;
 import com.vaadin.flow.component.html.H4;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.renderer.TemplateRenderer;
 
+import hu.kits.wallet.common.Clock;
+import hu.kits.wallet.common.Formatters;
 import hu.kits.wallet.common.Pair;
 import hu.kits.wallet.domain.Purchases;
-import hu.kits.wallet.infrastructure.web.ui.vaadin.AmountRenderer;
 
-public class SummaryBox extends Div {
+public class SummaryBox extends VerticalLayout {
 
     public void setItems(Purchases purchases) {
+        
+        addClassName("summary-box");
         
         removeAll();
         
         add(new H4("Átlagok"), createTable(asList(
                 new Pair<>("SUM", purchases.sum()),
-                new Pair<>("Current month", purchases.currentMonthSum()),
+                new Pair<>(Clock.today().getMonth().name(), purchases.currentMonthSum()),
                 new Pair<>("Monthly avg", purchases.monthlyAverage()),
                 new Pair<>("Weekly avg", purchases.weeklyAverage()),
                 new Pair<>("Daily avg", purchases.dailyAverage()))));
@@ -42,12 +46,14 @@ public class SummaryBox extends Div {
         
         grid.addColumn(Pair::first);
         
-        grid.addColumn(new AmountRenderer<>(Pair::second))
-            .setTextAlign(ColumnTextAlign.END);
+        final String amountTemplate = "<div style='text-align: right'>[[item.amount]]</div>";
+        grid.addColumn(TemplateRenderer.<Pair<String, Integer>>of(amountTemplate).withProperty("amount", pair -> Formatters.formatAmount(pair.second) + " Ft"));
         
         grid.setItems(entries);
         
         grid.setHeightByRows(true);
+        
+        grid.setSelectionMode(SelectionMode.NONE);
         
         return grid;
     }

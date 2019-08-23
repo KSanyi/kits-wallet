@@ -37,19 +37,16 @@ public class DateFilter extends HorizontalLayout {
         
         fromDateField.addValueChangeListener(e -> listeners.stream().forEach(l -> l.accept(getDateInterval())));
         fromDateField.setLocale(new Locale("HU"));
-        fromDateField.setWidth("160px");
+        fromDateField.setWidth("140px");
         toDateField.addValueChangeListener(e -> listeners.stream().forEach(l -> l.accept(getDateInterval())));
         toDateField.setLocale(new Locale("HU"));
-        toDateField.setWidth("160px");
+        toDateField.setWidth("140px");
         
         monthCombo.setPlaceholder("Hónap");
+        monthCombo.setWidth("175px");
         monthCombo.setItemLabelGenerator(d -> d.getYear() + " " + d.getMonth().toString().toLowerCase());
         monthCombo.setItems(createMonths());
         monthCombo.addValueChangeListener(e -> monthSelected(e.getValue()));
-        
-        //VerticalLayout buttonsBar = new VerticalLayout(thisMonthButton, thisYearButton);
-        //buttonsBar.setMargin(false);
-        //buttonsBar.setSpacing(false);
         
         thisMonthButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         thisYearButton.addThemeVariants(ButtonVariant.LUMO_SMALL);

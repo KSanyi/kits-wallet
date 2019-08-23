@@ -1,19 +1,20 @@
 package hu.kits.wallet.infrastructure.web.ui;
 
-import com.vaadin.flow.component.dependency.HtmlImport;
-import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.page.Viewport;
 import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.server.InitialPageSettings;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.server.PageConfigurator;
 
-@HtmlImport("frontend://styles/shared-styles.html")
+@CssImport("./styles/shared-styles.css")
 @PWA(name = "KITS Purchases", shortName = "KITS P", startPath="/purchase")
 @Viewport("width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes")
-public class MainLayout extends Div implements RouterLayout, PageConfigurator {
+public class MainLayout extends FlexLayout implements RouterLayout, PageConfigurator {
 
     public MainLayout() {
+        setSizeFull();
         addClassName("main-layout");
     }
     
