@@ -146,7 +146,7 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
         setDefaultHorizontalComponentAlignment(Alignment.STRETCH);
         setSpacing(false);
         
-        amountField.setPattern("[0-9]*");
+        amountField.setWidth("150px");
         amountField.setPreventInvalidInput(true);
         amountField.setSuffixComponent(new Span("Ft"));
         amountField.setClearButtonVisible(true);
