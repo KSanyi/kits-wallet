@@ -17,15 +17,24 @@ import hu.kits.wallet.common.Formatters;
 import hu.kits.wallet.common.Pair;
 import hu.kits.wallet.domain.Purchases;
 
-public class SummaryBox extends VerticalLayout {
+class SummaryBox extends VerticalLayout {
 
-    public void setItems(Purchases purchases) {
-        
+    // for the scrollbar to appear, see https://stackoverflow.com/questions/53849728/scrollable-layout-in-vaadin-flow
+    private final VerticalLayout content = new VerticalLayout();
+    
+    SummaryBox() {
         addClassName("summary-box");
+        setHeightFull();
+        getStyle().set("overflow", "auto");
         
-        removeAll();
+        content.setPadding(false);
+        add(content);
+    }
+    
+    void setItems(Purchases purchases) {
+        content.removeAll();
         
-        add(new H4("Átlagok"), createTable(asList(
+        content.add(new H4("Átlagok"), createTable(asList(
                 new Pair<>("SUM", purchases.sum()),
                 new Pair<>(Clock.today().getMonth().name(), purchases.currentMonthSum()),
                 new Pair<>("Monthly avg", purchases.monthlyAverage()),
@@ -37,22 +46,18 @@ public class SummaryBox extends VerticalLayout {
                 .sorted(Comparator.comparing((Pair<String, Integer> p) -> p.second).reversed())
                 .collect(toList());
     
-        add(new H4("Kategóriák"), createTable(categoryEntries));
+        content.add(new H4("Kategóriák"), createTable(categoryEntries));
     }
     
     private static Grid<Pair<String, Integer>> createTable(List<Pair<String, Integer>> entries) {
-        
         Grid<Pair<String, Integer>> grid = new Grid<>();
         
         grid.addColumn(Pair::first);
-        
         final String amountTemplate = "<div style='text-align: right'>[[item.amount]]</div>";
         grid.addColumn(TemplateRenderer.<Pair<String, Integer>>of(amountTemplate).withProperty("amount", pair -> Formatters.formatAmount(pair.second) + " Ft"));
         
         grid.setItems(entries);
-        
         grid.setHeightByRows(true);
-        
         grid.setSelectionMode(SelectionMode.NONE);
         
         return grid;

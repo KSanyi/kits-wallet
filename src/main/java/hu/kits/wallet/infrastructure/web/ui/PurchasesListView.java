@@ -51,6 +51,7 @@ public class PurchasesListView extends HorizontalLayout {
         tableWithSearchBar.setSizeFull();
         tableWithSearchBar.expand(grid);
         tableWithSearchBar.setPadding(false);
+        tableWithSearchBar.getStyle().set("padding-bottom", "10px");
         
         return tableWithSearchBar;
     }
