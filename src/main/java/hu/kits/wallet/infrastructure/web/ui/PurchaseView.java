@@ -62,7 +62,7 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
         
         shopCombo.setAllowCustomValue(true);
         shopCombo.addCustomValueSetListener(e -> {
-            if(shopCombo.getValue() == null) {
+            if(!e.getDetail().equals(shopCombo.getValue())) {
                 shopCombo.setValue(e.getDetail());
             }
         });
@@ -71,7 +71,7 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
         
         subjectCombo.setAllowCustomValue(true);
         subjectCombo.addCustomValueSetListener(e -> {
-            if(subjectCombo.getValue() == null) {
+            if(!e.getDetail().equals(subjectCombo.getValue())) {
                 subjectCombo.setValue(e.getDetail());
             }
         });
