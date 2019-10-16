@@ -1,6 +1,10 @@
 package hu.kits.wallet.infrastructure.web.ui;
 
+import java.lang.invoke.MethodHandles;
 import java.time.temporal.ChronoUnit;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -32,6 +36,8 @@ import hu.kits.wallet.domain.Purchases;
 @PageTitle("Vásárlás")
 public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long> {
 
+    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    
     private final DatePicker dateField = new DatePicker("Dátum", Clock.today());
     private final ComboBox<String> shopCombo = new ComboBox<>("Bolt");
     private final ComboBox<String> subjectCombo = new ComboBox<>("Tárgy");
@@ -179,7 +185,10 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
             duplicateButton.setVisible(true);
             purchaseRepository().loadAll()
                 .find(parameter)
-                .ifPresentOrElse(p -> binder.readBean(new PurchaseData(p)),
+                .ifPresentOrElse(p -> {
+                        binder.readBean(new PurchaseData(p));
+                        log.info("Purchase loaded: {}", p);
+                    },
                     () -> Notification.show("Ismeretlen azonosító", 3000, Position.MIDDLE));
         }
     }
