@@ -56,6 +56,8 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
     
     private Long purchaseId;
     
+    private PurchaseData purchaseData;
+    
     private final Binder<PurchaseData> binder = new Binder<>(PurchaseData.class);
 
     public PurchaseView() {
@@ -127,6 +129,7 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
     private void delete() {
         purchaseRepository().delete(purchaseId);
         Notification.show("Vásárlás törölve", 3000, Position.MIDDLE);
+        log.info("Purchase deleted: {}", purchaseData);
         getUI().ifPresent(ui -> ui.navigate("")); 
     }
     
@@ -161,6 +164,7 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
         
         saveButton.setIcon(new Icon("lumo", "checkmark"));
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        saveButton.setHeight("50px");
         
         cancelButton.setIcon(new Icon("lumo", "cross"));
         cancelButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
@@ -168,6 +172,7 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
         duplicateButton.setIcon(new Icon("lumo", "reload"));
         duplicateButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
         duplicateButton.setVisible(false);
+        duplicateButton.setHeight("50px");
         
         deleteButton.setIcon(new Icon("lumo", "cross"));
         deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
@@ -186,7 +191,8 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
             purchaseRepository().loadAll()
                 .find(parameter)
                 .ifPresentOrElse(p -> {
-                        binder.readBean(new PurchaseData(p));
+                        purchaseData = new PurchaseData(p);
+                        binder.readBean(purchaseData);
                         log.info("Purchase loaded: {}", p);
                     },
                     () -> Notification.show("Ismeretlen azonosító", 3000, Position.MIDDLE));
