@@ -5,12 +5,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import hu.kits.wallet.common.Clock;
 
-public class DateInterval implements Comparable<DateInterval> {
+public record DateInterval(LocalDate from, LocalDate to) implements Comparable<DateInterval> {
 
+    private static final LocalDate MIN = LocalDate.of(2000,1,1);
     private static final LocalDate MAX = LocalDate.of(2050,1,1);
     
 	public static DateInterval defaultValue() {
@@ -26,21 +26,15 @@ public class DateInterval implements Comparable<DateInterval> {
     }
 	
 	public static DateInterval openUntilToday() {
-        return new DateInterval(LocalDate.MIN, Clock.today());
+        return new DateInterval(MIN, Clock.today());
     }
 	
-	public LocalDate from;
-	
-	public LocalDate to;
-
-	public DateInterval(LocalDate from, LocalDate to) {
-		if(from == null) from = LocalDate.MIN;
+	public DateInterval {
+		if(from == null) from = MIN;
 		if(to == null) to = MAX;
 		if(to.isBefore(from)) {
 			throw new IllegalArgumentException("Invalid interval: " + from + " - " + to);
 		}
-		this.from = from;
-		this.to = to;
 	}
 	
 	public boolean contains(LocalDate value) {
@@ -63,19 +57,6 @@ public class DateInterval implements Comparable<DateInterval> {
 	
 	public int numberOfDays() {
 	    return (int)Duration.between(from.atStartOfDay(), to.atStartOfDay()).toDays();
-	}
-	
-	@Override
-	public boolean equals(Object other) {
-		if(other == this) return true;
-		if(other == null || !(other instanceof DateInterval)) return false;
-		DateInterval otherInterval = (DateInterval)other;
-		return from == otherInterval.from && to == otherInterval.to;
-	}
-	
-	@Override
-	public int hashCode() {
-		return Objects.hash(from, to);
 	}
 	
 	@Override

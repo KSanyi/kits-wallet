@@ -24,13 +24,13 @@ public class Purchases {
 
     public Purchases(List<Purchase> purchases) {
         entries = purchases.stream()
-                .sorted(Comparator.comparing((Purchase p) -> p.date).reversed())
+                .sorted(Comparator.comparing(Purchase::date).reversed())
                 .collect(toList());
     }
     
     public List<String> commonShops() {
         
-        Map<String , Long> frequencyMap = entries.stream().collect(groupingBy(p -> p.shop, counting()));
+        Map<String , Long> frequencyMap = entries.stream().collect(groupingBy(Purchase::shop, counting()));
         List<Entry<String, Long>> list = new ArrayList<>(frequencyMap.entrySet().stream().filter(e -> e.getValue() > 5).collect(toList()));
         list.sort(Entry.comparingByValue());
         Collections.reverse(list);
@@ -40,7 +40,7 @@ public class Purchases {
     
     public List<String> commonSubjects() {
         
-        Map<String , Long> frequencyMap = entries.stream().collect(groupingBy(p -> p.subject, counting()));
+        Map<String , Long> frequencyMap = entries.stream().collect(groupingBy(Purchase::subject, counting()));
         List<Entry<String, Long>> list = new ArrayList<>(frequencyMap.entrySet().stream().filter(e -> e.getValue() > 5).collect(toList()));
         list.sort(Entry.comparingByValue());
         Collections.reverse(list);
@@ -50,7 +50,7 @@ public class Purchases {
     
     public Optional<LocalDate> findLastPurchaseDate(String shop) {
         if(shop != null) {
-            return entries.stream().filter(p -> shop.equals(p.shop)).map(p -> p.date).sorted().reduce((first, second) -> second);
+            return entries.stream().filter(p -> shop.equals(p.shop())).map(Purchase::date).sorted().reduce((first, second) -> second);
         } else {
             return Optional.empty();
         }
@@ -58,17 +58,17 @@ public class Purchases {
     
     public Category findCategory(String shop) {
         
-        return entries.stream().filter(p -> shop.equals(p.shop)).findAny().map(p -> p.category).orElse(Category.OTHER);
+        return entries.stream().filter(p -> shop.equals(p.shop())).findAny().map(Purchase::category).orElse(Category.OTHER);
     }
     
     public Account finAccount(String shop) {
         
-        return entries.stream().filter(p -> shop.equals(p.shop)).findAny().map(p -> p.account).orElse(Account.S);
+        return entries.stream().filter(p -> shop.equals(p.shop())).findAny().map(Purchase::account).orElse(Account.S);
     }
 
     public String findMostCommonSubjectFor(String shop) {
         
-        Map<String , Long> frequencyMap = entries.stream().filter(p -> shop.equals(p.shop)).collect(groupingBy(p -> p.subject, counting()));
+        Map<String , Long> frequencyMap = entries.stream().filter(p -> shop.equals(p.shop())).collect(groupingBy(Purchase::subject, counting()));
         List<Entry<String, Long>> list = new ArrayList<>(frequencyMap.entrySet());
         list.sort(Entry.comparingByValue());
         
@@ -77,7 +77,7 @@ public class Purchases {
     
     public int findMostCommonAmountFor(String shop) {
         
-        Map<Integer , Long> frequencyMap = entries.stream().filter(p -> shop.equals(p.shop)).collect(groupingBy(p -> p.amount, counting()));
+        Map<Integer , Long> frequencyMap = entries.stream().filter(p -> shop.equals(p.shop())).collect(groupingBy(Purchase::amount, counting()));
         List<Entry<Integer, Long>> list = new ArrayList<>(frequencyMap.entrySet());
         list.sort(Entry.comparingByValue());
         
@@ -90,12 +90,12 @@ public class Purchases {
 
     public Purchases filter(String filterString, DateInterval dateInterval) {
         return new Purchases(entries.stream()
-                .filter(p -> dateInterval.contains(p.date))
+                .filter(p -> dateInterval.contains(p.date()))
                 .filter(p -> p.dataContains(filterString)).collect(toList()));
     }
     
     public int sum() {
-        return entries.stream().mapToInt(p -> p.amount).sum();
+        return entries.stream().mapToInt(Purchase::amount).sum();
     }
 
     public int monthlyAverage() {
@@ -118,26 +118,26 @@ public class Purchases {
     }
     
     private LocalDate firstDate() {
-        return entries.stream().map(p -> p.date).min(LocalDate::compareTo).get();
+        return entries.stream().map(Purchase::date).min(LocalDate::compareTo).get();
     }
     
     private LocalDate lastDate() {
-        return entries.stream().map(p -> p.date).max(LocalDate::compareTo).get();
+        return entries.stream().map(Purchase::date).max(LocalDate::compareTo).get();
     }
 
     public int currentMonthSum() {
         LocalDate thisMonth = LocalDate.now().withDayOfMonth(1);
-        return entries.stream().filter(p -> p.date.withDayOfMonth(1).equals(thisMonth)).mapToInt(p -> p.amount).sum();
+        return entries.stream().filter(p -> p.date().withDayOfMonth(1).equals(thisMonth)).mapToInt(Purchase::amount).sum();
     }
     
     public Map<Category, Integer> categorySummary() {
         
-        return entries.stream().collect(groupingBy(p -> p.category, summingInt(p -> p.amount)));
+        return entries.stream().collect(groupingBy(Purchase::category, summingInt(Purchase::amount)));
     }
 
     public Optional<Purchase> find(long id) {
         
-        return entries.stream().filter(e -> e.id == id).findFirst();
+        return entries.stream().filter(e -> e.id() == id).findFirst();
     }
 
 }

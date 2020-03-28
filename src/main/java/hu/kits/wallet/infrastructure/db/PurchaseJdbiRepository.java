@@ -61,13 +61,13 @@ public class PurchaseJdbiRepository implements PurchaseRepository {
 
     public void create(Purchase purchase) {
         Map<String, Object> values = new HashMap<>();
-        values.put(COLUMN_ACCOUNT, purchase.account.name());
-        values.put(COLUMN_DATE, purchase.date);
-        values.put(COLUMN_AMOUNT, purchase.amount);
-        values.put(COLUMN_CATEGORY, purchase.category.name());
-        values.put(COLUMN_SHOP, purchase.shop);
-        values.put(COLUMN_SUBJECT, purchase.subject);
-        values.put(COLUMN_COMMENT, purchase.comment);
+        values.put(COLUMN_ACCOUNT, purchase.account().name());
+        values.put(COLUMN_DATE, purchase.date());
+        values.put(COLUMN_AMOUNT, purchase.amount());
+        values.put(COLUMN_CATEGORY, purchase.category().name());
+        values.put(COLUMN_SHOP, purchase.shop());
+        values.put(COLUMN_SUBJECT, purchase.subject());
+        values.put(COLUMN_COMMENT, purchase.comment());
         
         jdbi.withHandle(handle -> JdbiUtil.createInsert(handle, TABLE_PURCHASE, values).execute());
         
@@ -82,8 +82,8 @@ public class PurchaseJdbiRepository implements PurchaseRepository {
 
     @Override
     public void updateOrCreate(Purchase purchase) {
-        if(purchase.id != null) {
-            delete(purchase.id);
+        if(purchase.id() != null) {
+            delete(purchase.id());
         }
         create(purchase);
     }

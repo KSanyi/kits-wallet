@@ -13,15 +13,14 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>12</java.version>
-        <maven.compiler.source>12</maven.compiler.source>
-        <maven.compiler.target>12</maven.compiler.target>
+        <java.version>14</java.version>
+        <maven.compiler.source>14</maven.compiler.source>
+        <maven.compiler.target>14</maven.compiler.target>
 
-        <vaadin.version>14.0.1</vaadin.version>
+        <vaadin.version>14.1.21</vaadin.version>
         <vaadin-install-nodejs>true</vaadin-install-nodejs>
-        <frontend-maven-plugin.nodeVersion>v10.16.0</frontend-maven-plugin.nodeVersion>
-        <frontend-maven-plugin.npmVersion>6.9.0</frontend-maven-plugin.npmVersion>
-        <jetty.version>9.4.17.v20190418</jetty.version>
+        <frontend-maven-plugin.nodeVersion>13.2.0</frontend-maven-plugin.nodeVersion>
+        <jetty.version>9.4.27.v20200227</jetty.version>
     </properties>
 
     <dependencyManagement>
@@ -166,6 +165,17 @@
         </resources>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <release>14</release>
+                    <compilerArgs>
+                        --enable-preview
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-maven-plugin</artifactId>
                 <version>${vaadin.version}</version>
@@ -248,7 +258,7 @@
                         <configuration>
                             <nodeVersion>${frontend-maven-plugin.nodeVersion}</nodeVersion>
                             <!-- optional: with node version greater than 4.0.0 will use npm provided by node distribution -->
-                            <npmVersion>${frontend-maven-plugin.npmVersion}</npmVersion>
+                            <!-- npmVersion>${frontend-maven-plugin.npmVersion}</npmVersion -->
                             <!-- optional: where to download node and npm from. Defaults to https://nodejs.org/dist/ -->
                             <!-- <downloadRoot>http://myproxy.example.org/nodejs/</downloadRoot> -->
                         </configuration>

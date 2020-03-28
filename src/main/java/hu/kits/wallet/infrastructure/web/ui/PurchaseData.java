@@ -20,7 +20,7 @@ public class PurchaseData {
     }
     
     public PurchaseData(Purchase purchase) {
-        this(purchase.account, purchase.date, purchase.amount, purchase.category, purchase.shop, purchase.subject, purchase.comment);
+        this(purchase.account(), purchase.date(), purchase.amount(), purchase.category(), purchase.shop(), purchase.subject(), purchase.comment());
     }
     
     public PurchaseData(Account account, LocalDate date, int amount, Category category, String shop, String subject, String comment) {
