@@ -5,6 +5,6 @@
 
 <!--  This is for Heroku deployments-->
   <activeProfiles>
-    <activeProfile>vaadin-install-nodejs</activeProfile>
+    <activeProfile>production</activeProfile>
   </activeProfiles>
 </settings>
