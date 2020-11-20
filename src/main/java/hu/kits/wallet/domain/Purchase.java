@@ -10,7 +10,7 @@ public record Purchase(Long id, Account account, LocalDate date, int amount, Cat
     }
     
     public static enum Category {
-        RESTAURANT, FOOD, SPORT, PRESENT, SERVICE, HOUSEHOLD, CLOTHES, CAR, SOFTWARE, TRAVEL, HEALTH, HARDWARE, TRANSPORT, OTHER
+        RESTAURANT, FOOD, SPORT, PRESENT, SERVICE, HOUSEHOLD, CLOTHES, CAR, SOFTWARE, TRAVEL, HEALTH, HARDWARE, TRANSPORT, KID, OTHER
     }
 
     public boolean dataContains(String filterText) {
