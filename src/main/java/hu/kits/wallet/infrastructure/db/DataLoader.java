@@ -49,7 +49,8 @@ public class DataLoader {
                     Category.valueOf(parts[2]),
                     parts[3],
                     parts[4],
-                    parts[5]);    
+                    parts[5],
+                    null);    
         } catch(Exception ex) {
             System.err.println("Error parsing line: " + line);
             throw new RuntimeException(ex);

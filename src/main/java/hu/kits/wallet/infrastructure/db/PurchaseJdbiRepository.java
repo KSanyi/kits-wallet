@@ -30,6 +30,7 @@ public class PurchaseJdbiRepository implements PurchaseRepository {
     private static final String COLUMN_SHOP = "SHOP";
     private static final String COLUMN_SUBJECT = "SUBJECT";
     private static final String COLUMN_COMMENT = "COMMENT";
+    private static final String COLUMN_TIMESTAMP = "TIMESTAMP";
     
     private final Jdbi jdbi;
 
@@ -56,7 +57,8 @@ public class PurchaseJdbiRepository implements PurchaseRepository {
                 Purchase.Category.valueOf(rs.getString(COLUMN_CATEGORY)),
                 rs.getString(COLUMN_SHOP),
                 rs.getString(COLUMN_SUBJECT),
-                rs.getString(COLUMN_COMMENT));
+                rs.getString(COLUMN_COMMENT),
+                rs.getTimestamp(COLUMN_TIMESTAMP).toLocalDateTime());
     }
 
     public void create(Purchase purchase) {

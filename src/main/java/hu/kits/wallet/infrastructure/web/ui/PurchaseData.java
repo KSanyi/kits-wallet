@@ -34,7 +34,7 @@ public class PurchaseData {
     }
     
     public Purchase toPurchase(Long id) {
-        return new Purchase(id, account, date, (int)amount, category, shop, subject, comment);
+        return new Purchase(id, account, date, (int)amount, category, shop, subject, comment, null);
     }
     
     public Account getAccount() {

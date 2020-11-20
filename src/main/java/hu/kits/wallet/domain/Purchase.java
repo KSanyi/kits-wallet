@@ -1,9 +1,18 @@
 package hu.kits.wallet.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
-public record Purchase(Long id, Account account, LocalDate date, int amount, Category category, String shop, String subject, String comment) {
+public record Purchase(Long id,
+        Account account, 
+        LocalDate date, 
+        int amount, 
+        Category category, 
+        String shop, 
+        String subject,
+        String comment, 
+        LocalDateTime timestamp) {
 
     public static enum Account {
         S, KITS

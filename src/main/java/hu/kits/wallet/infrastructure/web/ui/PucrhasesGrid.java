@@ -2,8 +2,12 @@ package hu.kits.wallet.infrastructure.web.ui;
 
 import static java.util.Comparator.comparing;
 
+import java.util.List;
+
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridSortOrder;
+import com.vaadin.flow.data.provider.SortDirection;
 import com.vaadin.flow.data.renderer.TemplateRenderer;
 
 import hu.kits.wallet.common.Formatters;
@@ -15,6 +19,7 @@ public class PucrhasesGrid extends Grid<Purchase> {
         setSizeFull();
         
         addColumn(p -> Formatters.formatDate(p.date()))
+            .setKey("date")
             .setHeader("Dátum")
             .setWidth("120px")
             .setFlexGrow(2)
@@ -52,7 +57,16 @@ public class PucrhasesGrid extends Grid<Purchase> {
             .setHeader("Acc.")
             .setFlexGrow(1);
         
+        addColumn(Purchase::timestamp)
+            .setKey("timestamp")
+            .setHeader("TS")
+            .setWidth("160px")
+            .setSortable(true)
+            .setFlexGrow(1);
+        
         addSelectionListener(e -> getUI().ifPresent(ui -> e.getFirstSelectedItem().ifPresent(item -> ui.navigate(PurchaseView.class, item.id()))));
+        
+        sort(List.of(new GridSortOrder<>(getColumnByKey("date"), SortDirection.DESCENDING),new GridSortOrder<>(getColumnByKey("timestamp"), SortDirection.DESCENDING)));
     }
 
 }
