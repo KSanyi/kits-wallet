@@ -12,7 +12,7 @@ public record Purchase(Long id,
         String shop, 
         String subject,
         String comment, 
-        LocalDateTime timestamp) {
+        LocalDateTime timestamp) implements Comparable<Purchase> {
 
     public static enum Account {
         S, KITS
@@ -36,6 +36,12 @@ public record Purchase(Long id,
                 .replace("ő", "o").replace("ö", "o").replace("ó", "o")
                 .replace("ű", "u").replace("ü", "u").replace("ú", "u")
                 .replace("á", "a").replace("í", "i").replace("é", "e");
+    }
+
+    @Override
+    public int compareTo(Purchase other) {
+        int dateCompare = other.date.compareTo(date);
+        return dateCompare != 0 ? dateCompare : other.timestamp.compareTo(timestamp);
     }
     
 }

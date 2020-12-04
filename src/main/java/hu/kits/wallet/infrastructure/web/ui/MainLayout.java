@@ -1,27 +1,86 @@
 package hu.kits.wallet.infrastructure.web.ui;
 
-import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.orderedlayout.FlexLayout;
-import com.vaadin.flow.component.page.Viewport;
-import com.vaadin.flow.router.RouterLayout;
-import com.vaadin.flow.server.InitialPageSettings;
-import com.vaadin.flow.server.PWA;
-import com.vaadin.flow.server.PageConfigurator;
+import java.util.HashSet;
+import java.util.Set;
 
-@CssImport("./styles/shared-styles.css")
-@PWA(name = "KITS Purchases", shortName = "KITS P", startPath="/purchase")
-@Viewport("width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes")
-public class MainLayout extends FlexLayout implements RouterLayout, PageConfigurator {
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.applayout.AppLayout;
+import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dependency.JsModule;
+import com.vaadin.flow.component.icon.IronIcon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.router.PreserveOnRefresh;
 
+import hu.kits.wallet.Main;
+import hu.kits.wallet.domain.Filter;
+import hu.kits.wallet.domain.Purchases;
+
+/**
+ * The main view is a top-level placeholder for other views.
+ */
+@JsModule("./styles/shared-styles.js")
+@PreserveOnRefresh
+public class MainLayout extends AppLayout {
+
+    private final FilterComponent filterComponent = new FilterComponent();
+    
+    private final Set<PurchasesChangedListener> purchasesChangedListeners = new HashSet<>();
+    
     public MainLayout() {
-        setSizeFull();
-        addClassName("main-layout");
+        setPrimarySection(Section.DRAWER);
+        addToNavbar(true, createHeaderContent());
+        addToDrawer(filterComponent);
+    }
+
+    private Component createHeaderContent() {
+        HorizontalLayout layout = new HorizontalLayout();
+        layout.setId("header");
+        layout.getThemeList().set("dark", true);
+        layout.setWidthFull();
+        //layout.setSpacing(false);
+        layout.setAlignItems(FlexComponent.Alignment.CENTER);
+        layout.add(new DrawerToggle());
+        layout.add(createNewPurchaseButton(), createStatsButton());
+        return layout;
     }
     
-    @Override
-    public void configurePage(InitialPageSettings settings) {
-        settings.addMetaTag("apple-mobile-web-app-capable", "yes");
-        settings.addMetaTag("apple-mobile-web-app-status-bar-style", "black");
+    private Button createNewPurchaseButton() {
+        Button newPurchaseButton = new Button("Vásárlás", new IronIcon("lumo", "plus"));
+        newPurchaseButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        newPurchaseButton.addClickListener(click -> getUI().ifPresent(ui -> ui.navigate(PurchaseView.class)));
+        return newPurchaseButton;
+    }
+    
+    private Button createStatsButton() {
+        Button statsButton = new Button("Stat");
+        statsButton.addClickListener(click -> getUI().ifPresent(ui -> ui.navigate(StatsView.class)));
+        return statsButton;
+    }
+
+    public static MainLayout get() {
+        return (MainLayout) UI.getCurrent().getChildren()
+                .filter(component -> component.getClass() == MainLayout.class)
+                .findFirst().get();
+    }
+
+    public void filterChanged(Filter filter) {
+        Purchases allPurchases = Main.purchaseRepository.loadAll();
+        Purchases filteredPurchases = allPurchases.filter(filter);
+        purchasesChangedListeners.forEach(listener -> listener.purchasesChanged(filteredPurchases));
+    }
+    
+    static interface PurchasesChangedListener {
+        void purchasesChanged(Purchases purchases);
+    }
+
+    public void addPurchasesChangedListener(PurchasesChangedListener purchasesChangedListener) {
+        if(purchasesChangedListeners.add(purchasesChangedListener)) {
+            purchasesChangedListener.purchasesChanged(Main.purchaseRepository.loadAll());
+        }
     }
 
 }

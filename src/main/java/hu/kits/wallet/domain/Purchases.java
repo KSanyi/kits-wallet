@@ -1,6 +1,5 @@
 package hu.kits.wallet.domain;
 
-import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.summingInt;
@@ -24,7 +23,7 @@ public class Purchases {
 
     public Purchases(List<Purchase> purchases) {
         entries = purchases.stream()
-                .sorted(comparing(Purchase::date).reversed().thenComparing(Purchase::timestamp).reversed())
+                .sorted()
                 .collect(toList());
     }
     
@@ -88,10 +87,11 @@ public class Purchases {
         return entries;
     }
 
-    public Purchases filter(String filterString, DateInterval dateInterval) {
+    public Purchases filter(Filter filter) {
         return new Purchases(entries.stream()
-                .filter(p -> dateInterval.contains(p.date()))
-                .filter(p -> p.dataContains(filterString)).collect(toList()));
+                .filter(p -> filter.dateInterval().contains(p.date()))
+                .filter(p -> p.dataContains(filter.filterString()))
+                .collect(toList()));
     }
     
     public int sum() {

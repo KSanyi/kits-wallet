@@ -1,31 +1,28 @@
 package hu.kits.wallet.infrastructure.web.ui;
 
 import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 
 import hu.kits.wallet.domain.Purchases;
 import hu.kits.wallet.infrastructure.web.ui.MainLayout.PurchasesChangedListener;
 
-@Route(value = "purchases", layout = MainLayout.class)
-@PageTitle("Vásárlások")
-@CssImport(value = "./styles/purchases-list-view.css", include = "lumo-badge")
-@PreserveOnRefresh
-public class PurchasesListView extends Div implements PurchasesChangedListener {
+@Route(value = "stats", layout = MainLayout.class)
+@PageTitle("Statisztikák")
+public class StatsView extends Div implements PurchasesChangedListener {
 
-    private final PucrhasesGrid grid = new PucrhasesGrid();
+    private final SummaryBox summaryBox = new SummaryBox();
 
-    public PurchasesListView() {
-        
-        setId("purchases-list-view");
-        addClassName("purchases-list-view");
+    public StatsView() {
         
         setSizeFull();
         
-        add(grid);
+        add(summaryBox);
+        summaryBox.setWidth(null);
+        summaryBox.setMinWidth("300px");
+        
+        add(summaryBox);
     }
     
     @Override
@@ -36,7 +33,8 @@ public class PurchasesListView extends Div implements PurchasesChangedListener {
     
     @Override
     public void purchasesChanged(Purchases purchases) {
-        grid.setItems(purchases.entries());
+        summaryBox.setItems(purchases);
+        
     }
 
 }

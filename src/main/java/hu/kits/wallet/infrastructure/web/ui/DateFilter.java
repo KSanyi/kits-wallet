@@ -15,12 +15,12 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import hu.kits.wallet.common.Clock;
 import hu.kits.wallet.domain.DateInterval;
 
-public class DateFilter extends HorizontalLayout {
+class DateFilter extends VerticalLayout {
 
     private final List<Consumer<DateInterval>> listeners = new ArrayList<>();
     
@@ -32,6 +32,8 @@ public class DateFilter extends HorizontalLayout {
     private final DatePicker toDateField = new DatePicker("");
     
     DateFilter() {
+        
+        setPadding(false);
         
         addClassName("date-filter");
         
@@ -80,11 +82,11 @@ public class DateFilter extends HorizontalLayout {
         toDateField.setValue(today().plusYears(1).withDayOfMonth(1).minusDays(1));
     }
 
-    public DateInterval getDateInterval() {
+    DateInterval getDateInterval() {
         return new DateInterval(fromDateField.getValue(), toDateField.getValue());
     }
 
-    public void addValueChangeListener(Consumer<DateInterval> listener) {
+    void addValueChangeListener(Consumer<DateInterval> listener) {
         listeners.add(listener);
     }
     

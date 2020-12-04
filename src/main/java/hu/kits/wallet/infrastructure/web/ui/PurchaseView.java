@@ -12,7 +12,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.IronIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -104,7 +104,7 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
         if(binder.writeBeanIfValid(purchaseData)) {
             purchaseRepository().updateOrCreate(purchaseData.toPurchase(purchaseId));
             Notification.show("Vásárlás mentve", 3000, Position.MIDDLE);
-            getUI().ifPresent(ui -> ui.navigate("")); 
+            getUI().ifPresent(ui -> ui.navigate(PurchasesListView.class)); 
         } else {
             Notification.show("Javítsd a hibákat", 3000, Position.MIDDLE);
         }
@@ -116,21 +116,21 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
             purchaseData.setDate(Clock.today());
             purchaseRepository().updateOrCreate(purchaseData.toPurchase(null));
             Notification.show("Vásárlás mentve", 3000, Position.MIDDLE);
-            getUI().ifPresent(ui -> ui.navigate("")); 
+            getUI().ifPresent(ui -> ui.navigate(PurchasesListView.class)); 
         } else {
             Notification.show("Javítsd a hibákat", 3000, Position.MIDDLE);
         }
     }
     
     private void cancel() {
-        getUI().ifPresent(ui -> ui.navigate("")); 
+        getUI().ifPresent(ui -> ui.navigate(PurchasesListView.class)); 
     }
     
     private void delete() {
         purchaseRepository().delete(purchaseId);
         Notification.show("Vásárlás törölve", 3000, Position.MIDDLE);
         log.info("Purchase deleted: {}", purchaseData);
-        getUI().ifPresent(ui -> ui.navigate("")); 
+        getUI().ifPresent(ui -> ui.navigate(PurchasesListView.class)); 
     }
     
     private void shopSelected(String shop) {
@@ -162,19 +162,19 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
         amountField.setClearButtonVisible(true);
         amountField.addFocusListener(e -> amountField.clear());
         
-        saveButton.setIcon(new Icon("lumo", "checkmark"));
+        saveButton.setIcon(new IronIcon("lumo", "checkmark"));
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         saveButton.setHeight("50px");
         
-        cancelButton.setIcon(new Icon("lumo", "cross"));
+        cancelButton.setIcon(new IronIcon("lumo", "cross"));
         cancelButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
         
-        duplicateButton.setIcon(new Icon("lumo", "reload"));
+        duplicateButton.setIcon(new IronIcon("lumo", "reload"));
         duplicateButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
         duplicateButton.setVisible(false);
         duplicateButton.setHeight("50px");
         
-        deleteButton.setIcon(new Icon("lumo", "cross"));
+        deleteButton.setIcon(new IronIcon("lumo", "cross"));
         deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
         deleteButton.setVisible(false);
         
