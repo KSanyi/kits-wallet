@@ -8,7 +8,28 @@ import java.util.List;
 
 import hu.kits.wallet.common.Clock;
 
-public record DateInterval(LocalDate from, LocalDate to) implements Comparable<DateInterval> {
+public class DateInterval implements Comparable<DateInterval> {
+
+    private final LocalDate from;
+    private final LocalDate to;
+    
+    public DateInterval(LocalDate from, LocalDate to) {
+        if(from == null) from = MIN;
+        if(to == null) to = MAX;
+        if(to.isBefore(from)) {
+            throw new IllegalArgumentException("Invalid interval: " + from + " - " + to);
+        }
+        this.from = from;
+        this.to = to;
+    }
+    
+    public LocalDate from() {
+        return from;
+    }
+
+    public LocalDate to() {
+        return to;
+    }
 
     private static final LocalDate MIN = LocalDate.of(2000,1,1);
     private static final LocalDate MAX = LocalDate.of(2050,1,1);
@@ -28,14 +49,6 @@ public record DateInterval(LocalDate from, LocalDate to) implements Comparable<D
 	public static DateInterval openUntilToday() {
         return new DateInterval(MIN, Clock.today());
     }
-	
-	public DateInterval {
-		if(from == null) from = MIN;
-		if(to == null) to = MAX;
-		if(to.isBefore(from)) {
-			throw new IllegalArgumentException("Invalid interval: " + from + " - " + to);
-		}
-	}
 	
 	public boolean contains(LocalDate value) {
 		return !value.isBefore(from) && !value.isAfter(to);
