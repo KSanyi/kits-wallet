@@ -5,7 +5,7 @@ import com.vaadin.flow.component.page.Viewport;
 import com.vaadin.flow.server.AppShellSettings;
 import com.vaadin.flow.server.PWA;
 
-@PWA(name = "kits-wallet", shortName = "kits-wallet", iconPath = "images/logo.png", backgroundColor = "#233348", themeColor = "#233348")
+@PWA(name = "kits-wallet", shortName = "kits-wallet", iconPath = "images/logo.png", backgroundColor = "#233348", themeColor = "#233348", startPath = "purchase")
 @Viewport("width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes")
 public class AppShell implements AppShellConfigurator {
 
