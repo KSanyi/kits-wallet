@@ -8,6 +8,7 @@ import com.vaadin.flow.component.icon.IronIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import hu.kits.wallet.common.Clock;
 import hu.kits.wallet.common.Formatters;
 import hu.kits.wallet.domain.Purchase;
 
@@ -70,6 +71,11 @@ class PucrhasesGrid extends Grid<Purchase> {
         
         card.add(amount, description);
         //card.setVerticalComponentAlignment(Alignment.CENTER, amount);
+        
+        if(purchase.date().isAfter(Clock.today())) {
+            card.getStyle().set("background-color", "#ADDFFF");    
+        }
+        
         return card;
     }
 

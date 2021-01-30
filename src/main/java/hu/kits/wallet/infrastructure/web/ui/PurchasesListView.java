@@ -7,6 +7,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 
+import hu.kits.wallet.common.Clock;
 import hu.kits.wallet.domain.Purchases;
 import hu.kits.wallet.infrastructure.web.ui.MainLayout.PurchasesChangedListener;
 
@@ -36,7 +37,10 @@ public class PurchasesListView extends Div implements PurchasesChangedListener {
     
     @Override
     public void purchasesChanged(Purchases purchases) {
-        grid.setItems(purchases.entries());
+        var items = purchases.entries();
+        int numberOfFutureItems = (int)items.stream().filter(i -> i.date().isAfter(Clock.today())).count();
+        grid.setItems(items);
+        grid.scrollToIndex(numberOfFutureItems);
     }
 
 }
