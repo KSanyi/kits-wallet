@@ -1,10 +1,5 @@
 package hu.kits.wallet.infrastructure.web.ui;
 
-import static hu.kits.wallet.common.Clock.today;
-import static java.time.Period.ofMonths;
-import static java.util.Collections.reverseOrder;
-import static java.util.stream.Collectors.toList;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +19,8 @@ class DateFilter extends VerticalLayout {
 
     private final List<Consumer<DateInterval>> listeners = new ArrayList<>();
     
-    private final Button thisMonthButton = new Button(Clock.today().getMonth().name(), click -> thisMonthSelected());
-    private final Button thisYearButton = new Button(String.valueOf(Clock.today().getYear()), click -> thisYearSelected());
+    private List<Button> monthButtons = createMonthButtons();
+    private List<Button> yearsButtons = createYearButtons();
     private final ComboBox<LocalDate> monthCombo = new ComboBox<>();
     
     private final DatePicker fromDateField = new DatePicker("");
@@ -44,42 +39,44 @@ class DateFilter extends VerticalLayout {
         toDateField.setLocale(new Locale("HU"));
         toDateField.setWidth("140px");
         
-        monthCombo.setPlaceholder("Hónap");
-        monthCombo.setWidth("175px");
-        monthCombo.setItemLabelGenerator(d -> d.getYear() + " " + d.getMonth().toString().toLowerCase());
-        monthCombo.setItems(createMonths());
-        monthCombo.addValueChangeListener(e -> monthSelected(e.getValue()));
-        
-        thisMonthButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        thisYearButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
-        
-        add(fromDateField, toDateField, monthCombo, thisMonthButton, thisYearButton);
+        add(fromDateField, toDateField, monthCombo);
+        monthButtons.forEach(this::add);
+        yearsButtons.forEach(this::add);
     }
 
-    private static List<LocalDate> createMonths() {
-        LocalDate start = LocalDate.of(2018,7,1);
-        return start.datesUntil(today(), ofMonths(1))
-                .sorted(reverseOrder())
-                .collect(toList());
-    }
-
-    private void thisMonthSelected() {
-        monthSelected(today());
-        monthCombo.clear();
-    }
-    
-    private void monthSelected(LocalDate month) {
-        if(month != null) {
-            toDateField.setValue(LocalDate.MAX);
-            fromDateField.setValue(month.withDayOfMonth(1));
-            toDateField.setValue(month.plusMonths(1).withDayOfMonth(1).minusDays(1));            
+    private List<Button> createYearButtons() {
+        List<Button> buttons = new ArrayList<>();
+        for(int i=Clock.today().getYear();i >=2018;i--) {
+            int year = i;
+            Button button = new Button(String.valueOf(year), click -> yearSelected(year));
+            button.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            buttons.add(button);
         }
+        return buttons;
     }
     
-    private void thisYearSelected() {
+    private List<Button> createMonthButtons() {
+        List<Button> buttons = new ArrayList<>();
+        
+        for(int i=0;i<12;i++) {
+            LocalDate date = Clock.today().minusMonths(i);    
+            Button button = new Button(String.valueOf(date.getMonth()), click -> yearMonthSelected(date.getYear(), date.getMonthValue()));
+            button.addThemeVariants(ButtonVariant.LUMO_SMALL);
+            buttons.add(button);
+        }
+        return buttons;
+    }
+
+    private void yearSelected(int year) {
         toDateField.setValue(LocalDate.MAX);
-        fromDateField.setValue(today().withDayOfYear(1));
-        toDateField.setValue(today().plusYears(1).withDayOfMonth(1).minusDays(1));
+        fromDateField.setValue(LocalDate.of(year, 1, 1));
+        toDateField.setValue(LocalDate.of(year, 12, 31));
+    }
+    
+    private void yearMonthSelected(int year, int monthValue) {
+        toDateField.setValue(LocalDate.MAX);
+        fromDateField.setValue(LocalDate.of(year, monthValue, 1));
+        toDateField.setValue(LocalDate.of(year, monthValue, 1).plusMonths(1).minusDays(1));
     }
 
     DateInterval getDateInterval() {

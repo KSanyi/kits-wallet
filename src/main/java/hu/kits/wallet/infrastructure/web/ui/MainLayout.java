@@ -44,7 +44,7 @@ public class MainLayout extends AppLayout {
         //layout.setSpacing(false);
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
         layout.add(new DrawerToggle());
-        layout.add(createNewPurchaseButton(), createStatsButton());
+        layout.add(createNewPurchaseButton(), createStatsButton(), createPurchasesButton());
         return layout;
     }
     
@@ -58,6 +58,12 @@ public class MainLayout extends AppLayout {
     private Button createStatsButton() {
         Button statsButton = new Button("Stat");
         statsButton.addClickListener(click -> getUI().ifPresent(ui -> ui.navigate(StatsView.class)));
+        return statsButton;
+    }
+    
+    private Button createPurchasesButton() {
+        Button statsButton = new Button("Vásárlások");
+        statsButton.addClickListener(click -> getUI().ifPresent(ui -> ui.navigate(PurchasesListView.class)));
         return statsButton;
     }
 

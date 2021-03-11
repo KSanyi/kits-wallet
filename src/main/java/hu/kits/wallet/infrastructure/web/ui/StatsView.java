@@ -1,5 +1,6 @@
 package hu.kits.wallet.infrastructure.web.ui;
 
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -18,16 +19,21 @@ public class StatsView extends Div implements PurchasesChangedListener {
         setSizeFull();
         
         add(summaryBox);
-        summaryBox.setWidth(null);
+        //summaryBox.setWidth(null);
         summaryBox.setMinWidth("300px");
         
         add(summaryBox);
     }
     
     @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        MainLayout.get().addPurchasesChangedListener(this);
+    }
+    
+    @Override
     public void purchasesChanged(Purchases purchases) {
         summaryBox.setItems(purchases);
-        
     }
 
 }
