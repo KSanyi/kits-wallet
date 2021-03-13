@@ -90,7 +90,7 @@ public class Purchases {
     public Purchases filter(Filter filter) {
         return new Purchases(entries.stream()
                 .filter(p -> filter.dateInterval().contains(p.date()))
-                .filter(p -> p.dataContains(filter.filterString()))
+                .filter(p -> p.filter(filter.filterString()))
                 .collect(toList()));
     }
     

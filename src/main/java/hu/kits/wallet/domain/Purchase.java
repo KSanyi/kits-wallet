@@ -1,7 +1,10 @@
 package hu.kits.wallet.domain;
 
+import static java.util.stream.Collectors.toList;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class Purchase implements Comparable<Purchase> {
@@ -72,13 +75,9 @@ public class Purchase implements Comparable<Purchase> {
         RESTAURANT, FOOD, SPORT, PRESENT, SERVICE, HOUSEHOLD, CLOTHES, CAR, SOFTWARE, TRAVEL, HEALTH, HARDWARE, TRANSPORT, KID, OTHER
     }
 
-    public boolean dataContains(String filterText) {
-        String[] filterParts = cleanString(filterText).split(" ");
-        return Stream.of(filterParts).allMatch(filterPart -> 
-            cleanString(category.name()).contains(filterPart) ||
-            cleanString(shop).contains(filterPart) ||
-            cleanString(subject).contains(filterPart) ||
-            cleanString(comment).contains(filterPart));
+    public boolean filter(String filterText) {
+        String[] filterWords = cleanString(filterText).split(" ");
+        return Stream.of(filterWords).allMatch(this::filterWord);
     }
     
     private static String cleanString(String value) {
@@ -87,7 +86,22 @@ public class Purchase implements Comparable<Purchase> {
                 .replace("ű", "u").replace("ü", "u").replace("ú", "u")
                 .replace("á", "a").replace("í", "i").replace("é", "e");
     }
-
+    
+    private boolean filterWord(String filterWord) {
+        List<String> fieldsValues = List.of(category.name(), shop, subject, comment).stream()
+                .map(Purchase::cleanString)
+                .collect(toList());
+        
+        boolean negativeFilter = filterWord.startsWith("-");
+        String word = negativeFilter ? filterWord.substring(1) : filterWord;
+        
+        if(negativeFilter) {
+            return fieldsValues.stream().allMatch(fieldValue -> ! fieldValue.contains(word));
+        } else {
+            return fieldsValues.stream().anyMatch(fieldValue -> fieldValue.contains(word));
+        }
+    }
+    
     @Override
     public int compareTo(Purchase other) {
         int dateCompare = other.date.compareTo(date);
