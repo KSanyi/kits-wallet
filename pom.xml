@@ -17,7 +17,7 @@
         <maven.compiler.source>15</maven.compiler.source>
         <maven.compiler.target>15</maven.compiler.target>
 
-        <vaadin.version>18.0.1</vaadin.version>
+        <vaadin.version>19.0.4</vaadin.version>
         <jetty.version>9.4.38.v20210224</jetty.version>
     </properties>
 
@@ -141,6 +141,9 @@
                 <version>3.8.0</version>
                 <configuration>
                     <release>15</release>
+                    <compilerArgs>
+                        --enable-preview
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>
