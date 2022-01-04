@@ -7,65 +7,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class Purchase implements Comparable<Purchase> {
-
-    private final Long id;
-    private final Account account; 
-    private final LocalDate date; 
-    private final int amount;
-    private final Category category; 
-    private final String shop;
-    private final String subject;
-    private final String comment;
-    private final LocalDateTime timestamp;
-    
-    public Purchase(Long id, Account account, LocalDate date, int amount, Category category, String shop, String subject, String comment, LocalDateTime timestamp) {
-        this.id = id;
-        this.account = account;
-        this.date = date;
-        this.amount = amount;
-        this.category = category;
-        this.shop = shop;
-        this.subject = subject;
-        this.comment = comment;
-        this.timestamp = timestamp;
-    }
-    
-    public Long id() {
-        return id;
-    }
-
-    public Account account() {
-        return account;
-    }
-
-    public LocalDate date() {
-        return date;
-    }
-
-    public int amount() {
-        return amount;
-    }
-
-    public Category category() {
-        return category;
-    }
-
-    public String shop() {
-        return shop;
-    }
-
-    public String subject() {
-        return subject;
-    }
-
-    public String comment() {
-        return comment;
-    }
-
-    public LocalDateTime timestamp() {
-        return timestamp;
-    }
+public record Purchase(Long id,
+        Account account,
+        LocalDate date,
+        int amount,  
+        Category category, 
+        String shop,
+        String subject,
+        String comment, 
+        List<Photo> photos,
+        LocalDateTime timestamp) implements Comparable<Purchase> {
 
     public static enum Account {
         S, KITS

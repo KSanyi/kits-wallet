@@ -50,6 +50,7 @@ public class DataLoader {
                     parts[3],
                     parts[4],
                     parts[5],
+                    List.of(),
                     null);    
         } catch(Exception ex) {
             System.err.println("Error parsing line: " + line);

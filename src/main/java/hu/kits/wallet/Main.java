@@ -15,6 +15,7 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 import com.mysql.cj.jdbc.MysqlDataSource;
 
 import hu.kits.wallet.domain.PurchaseRepository;
+import hu.kits.wallet.infrastructure.FileStorage;
 import hu.kits.wallet.infrastructure.db.PurchaseJdbiRepository;
 import hu.kits.wallet.infrastructure.web.HttpServer;
 
@@ -29,12 +30,14 @@ public class Main {
     }
     
     public static final PurchaseRepository purchaseRepository;
+    public static final FileStorage fileStorage;
     
     static {
         try {
             URI dbUri = getDatabaseUri();
             DataSource dataSource = createDataSource(dbUri);
             purchaseRepository = new PurchaseJdbiRepository(dataSource);
+            fileStorage = new FileStorage.DummyFileStorage();
         } catch(Exception ex) {
             throw new RuntimeException(ex);
         }

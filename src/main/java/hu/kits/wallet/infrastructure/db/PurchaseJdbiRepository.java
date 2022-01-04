@@ -1,11 +1,15 @@
 package hu.kits.wallet.infrastructure.db;
 
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+
 import java.lang.invoke.MethodHandles;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import javax.sql.DataSource;
 
@@ -13,6 +17,7 @@ import org.jdbi.v3.core.Jdbi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import hu.kits.wallet.domain.Photo;
 import hu.kits.wallet.domain.Purchase;
 import hu.kits.wallet.domain.PurchaseRepository;
 import hu.kits.wallet.domain.Purchases;
@@ -31,6 +36,7 @@ public class PurchaseJdbiRepository implements PurchaseRepository {
     private static final String COLUMN_SUBJECT = "SUBJECT";
     private static final String COLUMN_COMMENT = "COMMENT";
     private static final String COLUMN_TIMESTAMP = "TIMESTAMP";
+    private static final String COLUMN_PHOTOS = "PHOTOS";
     
     private final Jdbi jdbi;
 
@@ -58,7 +64,23 @@ public class PurchaseJdbiRepository implements PurchaseRepository {
                 rs.getString(COLUMN_SHOP),
                 rs.getString(COLUMN_SUBJECT),
                 rs.getString(COLUMN_COMMENT),
+                parsePhotos(rs.getString(COLUMN_PHOTOS)),
                 rs.getTimestamp(COLUMN_TIMESTAMP).toLocalDateTime());
+    }
+
+    private static List<Photo> parsePhotos(String photoIdsString) {
+        if(photoIdsString == null || photoIdsString.isEmpty()) {
+            return List.of();
+        } else {
+            return Stream.of(photoIdsString.split(","))
+                .map(String::trim)
+                .map(Photo::new)
+                .collect(toList());
+        }
+    }
+    
+    private static String createString(List<Photo> photos) {
+        return photos.stream().map(Photo::id).collect(joining(","));
     }
 
     public void create(Purchase purchase) {
@@ -70,6 +92,7 @@ public class PurchaseJdbiRepository implements PurchaseRepository {
         values.put(COLUMN_SHOP, purchase.shop());
         values.put(COLUMN_SUBJECT, purchase.subject());
         values.put(COLUMN_COMMENT, purchase.comment());
+        values.put(COLUMN_PHOTOS, createString(purchase.photos()));
         
         jdbi.withHandle(handle -> JdbiUtil.createInsert(handle, TABLE_PURCHASE, values).execute());
         

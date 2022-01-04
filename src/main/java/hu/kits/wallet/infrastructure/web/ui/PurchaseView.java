@@ -45,6 +45,7 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
     private final ComboBox<Account> accountCombo = new ComboBox<>("Account", Account.values());
     private final NumberField amountField = new NumberField("Összeg");
     private final TextArea commentField = new TextArea("Megjegyzés");
+    private final PhotosComponent photosComponent = new PhotosComponent("Fényképek");
     private final Div lastPurchaseForShopLabel = new Div();
     
     private final Button saveButton = new Button("Mentés", click -> save());
@@ -97,6 +98,8 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
         binder.forField(accountCombo).asRequired("Nem lehet üres").bind("account");
         binder.forField(amountField).asRequired("Nem lehet üres").bind("amount");
         binder.forField(commentField).bind("comment");
+        binder.forField(photosComponent).bind("photos");
+        
     }
     
     private void save() {
@@ -178,7 +181,7 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
         deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
         deleteButton.setVisible(false);
         
-        add(cancelButton, dateField, shopCombo, lastPurchaseForShopLabel, subjectCombo, categoryCombo, accountCombo, amountField, commentField, 
+        add(cancelButton, dateField, shopCombo, lastPurchaseForShopLabel, subjectCombo, categoryCombo, accountCombo, amountField, commentField, photosComponent,
                 saveButton, duplicateButton, deleteButton);
     }
 
