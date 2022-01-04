@@ -2,7 +2,6 @@ package hu.kits.wallet.infrastructure.web.ui;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -12,8 +11,9 @@ import org.apache.commons.io.IOUtils;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.customfield.CustomField;
-import com.vaadin.flow.component.html.Anchor;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H4;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -73,11 +73,13 @@ public class PhotosComponent extends CustomField<List<Photo>> {
     
     private void addPhoto(Photo photo) {
         photos.add(photo);
-        Anchor anchor = new Anchor(new StreamResource(photo.id(), () -> createResource(photo.id())), photo.id());
+        Button showButton = new Button(photo.id());
+        showButton.addClickListener(click -> showPhoto(photo));
+        showButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST, ButtonVariant.LUMO_SMALL);
         Button removeButton = new Button(VaadinIcon.CLOSE.create());
         removeButton.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ICON);
         
-        HorizontalLayout layout = new HorizontalLayout(anchor, removeButton);
+        HorizontalLayout layout = new HorizontalLayout(showButton, removeButton);
         removeButton.addClickListener(click -> {
             mainLayout.remove(layout);
             photos.remove(photo);
@@ -88,12 +90,15 @@ public class PhotosComponent extends CustomField<List<Photo>> {
         mainLayout.add(new Span(" "), layout);
     }
     
-    void changeHappened() {
-        this.updateValue();
+    private void showPhoto(Photo photo) {
+        Dialog dialog = new Dialog();
+        StreamResource resource = new StreamResource(photo.id(), () -> new ByteArrayInputStream(fileStorage.getFile(photo.id())));
+        dialog.add(new Image(resource, photo.id()));
+        dialog.open();
     }
 
-    private InputStream createResource(String id) {
-        return new ByteArrayInputStream(fileStorage.getFile(id));
+    void changeHappened() {
+        this.updateValue();
     }
 
 }
