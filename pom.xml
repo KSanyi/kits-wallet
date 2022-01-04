@@ -13,12 +13,12 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>16</java.version>
-        <maven.compiler.source>16</maven.compiler.source>
-        <maven.compiler.target>16</maven.compiler.target>
+        <java.version>17</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
 
-        <vaadin.version>20.0.4</vaadin.version>
-        <jetty.version>9.4.38.v20210224</jetty.version>
+        <vaadin.version>21.0.9</vaadin.version>
+        <jetty.version>9.4.44.v20210927</jetty.version>
     </properties>
 
     <dependencyManagement>
@@ -140,7 +140,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
-                    <release>16</release>
+                    <release>17</release>
                 </configuration>
             </plugin>
             <plugin>

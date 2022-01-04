@@ -1,3 +1,3 @@
 SET CLEARDB_DATABASE_URL=mysql://b7574304cef6f2:4d1ff9f8@eu-cdbr-west-02.cleardb.net/heroku_0e8a3eb7b59ea61?reconnect=true
 SET PORT=5555
-java --enable-preview -jar target/app.jar
+java -jar target/app.jar
