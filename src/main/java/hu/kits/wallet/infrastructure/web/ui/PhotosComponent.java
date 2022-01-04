@@ -1,6 +1,8 @@
 package hu.kits.wallet.infrastructure.web.ui;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -17,10 +19,11 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
+import com.vaadin.flow.server.StreamResource;
 
 import hu.kits.wallet.Main;
+import hu.kits.wallet.domain.FileStorage;
 import hu.kits.wallet.domain.Photo;
-import hu.kits.wallet.infrastructure.FileStorage;
 
 public class PhotosComponent extends CustomField<List<Photo>> {
 
@@ -41,6 +44,7 @@ public class PhotosComponent extends CustomField<List<Photo>> {
         upload.addSucceededListener(event -> {
             String photoId = UUID.randomUUID().toString().substring(0, 8) + "_" + event.getFileName();
             addPhoto(new Photo(photoId));
+            changeHappened();
             
             byte[] bytes;
             try {
@@ -68,8 +72,8 @@ public class PhotosComponent extends CustomField<List<Photo>> {
     }
     
     private void addPhoto(Photo photo) {
-        this.photos.add(photo);
-        Anchor anchor = new Anchor("", photo.id());
+        photos.add(photo);
+        Anchor anchor = new Anchor(new StreamResource(photo.id(), () -> createResource(photo.id())), photo.id());
         Button removeButton = new Button(VaadinIcon.CLOSE.create());
         removeButton.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ICON);
         
@@ -77,10 +81,19 @@ public class PhotosComponent extends CustomField<List<Photo>> {
         removeButton.addClickListener(click -> {
             mainLayout.remove(layout);
             photos.remove(photo);
+            changeHappened();
             fileStorage.delete(photo.id());
         });
         
         mainLayout.add(new Span(" "), layout);
+    }
+    
+    void changeHappened() {
+        this.updateValue();
+    }
+
+    private InputStream createResource(String id) {
+        return new ByteArrayInputStream(fileStorage.getFile(id));
     }
 
 }

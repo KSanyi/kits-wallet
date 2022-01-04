@@ -1,4 +1,4 @@
-package hu.kits.wallet.infrastructure;
+package hu.kits.wallet.domain;
 
 public interface FileStorage {
 

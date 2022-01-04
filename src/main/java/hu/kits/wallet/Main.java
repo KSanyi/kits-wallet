@@ -14,9 +14,10 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
 
+import hu.kits.wallet.domain.FileStorage;
 import hu.kits.wallet.domain.PurchaseRepository;
-import hu.kits.wallet.infrastructure.FileStorage;
 import hu.kits.wallet.infrastructure.db.PurchaseJdbiRepository;
+import hu.kits.wallet.infrastructure.s3.S3Storage;
 import hu.kits.wallet.infrastructure.web.HttpServer;
 
 public class Main {
@@ -37,7 +38,7 @@ public class Main {
             URI dbUri = getDatabaseUri();
             DataSource dataSource = createDataSource(dbUri);
             purchaseRepository = new PurchaseJdbiRepository(dataSource);
-            fileStorage = new FileStorage.DummyFileStorage();
+            fileStorage = createFileStorage();
         } catch(Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -85,6 +86,14 @@ public class Main {
         dataSource.setUser(username);
         dataSource.setPassword(password);
         return dataSource;
+    }
+    private static FileStorage createFileStorage() {
+        String awsAccessKey = System.getenv("BUCKETEER_AWS_ACCESS_KEY_ID");
+        String awsRegion = System.getenv("BUCKETEER_AWS_REGION");
+        String awsSecretKey = System.getenv("BUCKETEER_AWS_SECRET_ACCESS_KEY");
+        String awsBucketName = System.getenv("BUCKETEER_BUCKET_NAME");
+        
+        return new S3Storage(awsRegion, awsAccessKey, awsSecretKey, awsBucketName);
     }
     
 }
