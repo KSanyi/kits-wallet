@@ -11,12 +11,11 @@ import org.apache.commons.io.IOUtils;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.customfield.CustomField;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.server.StreamResource;
@@ -73,13 +72,17 @@ public class PhotosComponent extends CustomField<List<Photo>> {
     
     private void addPhoto(Photo photo) {
         photos.add(photo);
-        Button showButton = new Button(photo.id());
-        showButton.addClickListener(click -> showPhoto(photo));
-        showButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST, ButtonVariant.LUMO_SMALL);
+        StreamResource resource = new StreamResource(photo.id(), () -> new ByteArrayInputStream(fileStorage.getFile(photo.id())));
+        Image image = new Image(resource, photo.id());
+        image.setWidth("200px");
         Button removeButton = new Button(VaadinIcon.CLOSE.create());
         removeButton.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ICON);
         
-        HorizontalLayout layout = new HorizontalLayout(showButton, removeButton);
+        VerticalLayout layout = new VerticalLayout(image, removeButton);
+        layout.setWidth("200px");
+        layout.setPadding(false);
+        layout.setSpacing(false);
+        removeButton.setWidthFull();
         removeButton.addClickListener(click -> {
             mainLayout.remove(layout);
             photos.remove(photo);
@@ -87,16 +90,9 @@ public class PhotosComponent extends CustomField<List<Photo>> {
             fileStorage.delete(photo.id());
         });
         
-        mainLayout.add(new Span(" "), layout);
+        mainLayout.add(layout);
     }
     
-    private void showPhoto(Photo photo) {
-        Dialog dialog = new Dialog();
-        StreamResource resource = new StreamResource(photo.id(), () -> new ByteArrayInputStream(fileStorage.getFile(photo.id())));
-        dialog.add(new Image(resource, photo.id()));
-        dialog.open();
-    }
-
     void changeHappened() {
         this.updateValue();
     }
