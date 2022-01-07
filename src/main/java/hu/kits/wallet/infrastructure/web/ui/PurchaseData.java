@@ -38,6 +38,7 @@ public class PurchaseData {
     }
     
     public Purchase toPurchase(Long id) {
+        List<Photo> photos = this.photos != null ? this.photos : List.of();
         return new Purchase(id, account, date, (int)amount, category, shop, subject, comment, photos, null);
     }
     
