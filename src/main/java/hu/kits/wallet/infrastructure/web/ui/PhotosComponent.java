@@ -8,9 +8,11 @@ import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.customfield.CustomField;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -22,11 +24,11 @@ import com.vaadin.flow.server.StreamResource;
 
 import hu.kits.wallet.Main;
 import hu.kits.wallet.domain.FileStorage;
-import hu.kits.wallet.domain.Photo;
+import hu.kits.wallet.domain.File;
 
-public class PhotosComponent extends CustomField<List<Photo>> {
+public class PhotosComponent extends CustomField<List<File>> {
 
-    private final List<Photo> photos = new ArrayList<>();
+    private final List<File> files = new ArrayList<>();
     
     private final HorizontalLayout mainLayout = new HorizontalLayout();
     
@@ -37,57 +39,65 @@ public class PhotosComponent extends CustomField<List<Photo>> {
         
         MemoryBuffer buffer = new MemoryBuffer();
         Upload upload = new Upload(buffer);
-        upload.setAcceptedFileTypes("image/*");
+        //upload.setAcceptedFileTypes("image/*");
         upload.getElement().setAttribute("capture", "environment");
         
         upload.addSucceededListener(event -> {
-            String photoId = UUID.randomUUID().toString().substring(0, 8) + "_" + event.getFileName();
-            addPhoto(new Photo(photoId));
+            String fileId = UUID.randomUUID().toString().substring(0, 8) + "_" + event.getFileName();
+            addFile(new File(fileId));
             changeHappened();
             
             byte[] bytes;
             try {
                 bytes = IOUtils.toByteArray(buffer.getInputStream());
             } catch (IOException ex) {
-                throw new RuntimeException("Error uploading photo", ex);
+                throw new RuntimeException("Error uploading file", ex);
             }
             
-            fileStorage.saveFile(photoId, bytes);
+            fileStorage.saveFile(fileId, bytes);
         });
                 
         mainLayout.add(upload);
     }
 
     @Override
-    protected List<Photo> generateModelValue() {
-        return List.copyOf(photos);
+    protected List<File> generateModelValue() {
+        return List.copyOf(files);
     }
 
     @Override
-    protected void setPresentationValue(List<Photo> photos) {
-        for(Photo photo : photos) {
-            addPhoto(photo);
+    protected void setPresentationValue(List<File> files) {
+        for(File file : files) {
+            addFile(file);
         }
     }
     
-    private void addPhoto(Photo photo) {
-        photos.add(photo);
-        StreamResource resource = new StreamResource(photo.id(), () -> new ByteArrayInputStream(fileStorage.getFile(photo.id())));
-        Image image = new Image(resource, photo.id());
-        image.setWidth("200px");
+    private void addFile(File file) {
+        files.add(file);
+        StreamResource resource = new StreamResource(file.id(), () -> new ByteArrayInputStream(fileStorage.getFile(file.id())));
+        
+        Component fileComponent;
+        if(file.isPhoto()) {
+            Image image = new Image(resource, file.id());
+            image.setWidth("200px");
+            fileComponent = image;
+        } else {
+            fileComponent = new Anchor(resource, file.id());
+        }
+        
         Button removeButton = new Button(VaadinIcon.CLOSE.create());
         removeButton.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ICON);
         
-        VerticalLayout layout = new VerticalLayout(image, removeButton);
+        VerticalLayout layout = new VerticalLayout(fileComponent, removeButton);
         layout.setWidth("200px");
         layout.setPadding(false);
         layout.setSpacing(false);
         removeButton.setWidthFull();
         removeButton.addClickListener(click -> {
             mainLayout.remove(layout);
-            photos.remove(photo);
+            files.remove(file);
             changeHappened();
-            fileStorage.delete(photo.id());
+            fileStorage.delete(file.id());
         });
         
         mainLayout.add(layout);

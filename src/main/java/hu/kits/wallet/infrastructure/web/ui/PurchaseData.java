@@ -3,7 +3,7 @@ package hu.kits.wallet.infrastructure.web.ui;
 import java.time.LocalDate;
 import java.util.List;
 
-import hu.kits.wallet.domain.Photo;
+import hu.kits.wallet.domain.File;
 import hu.kits.wallet.domain.Purchase;
 import hu.kits.wallet.domain.Purchase.Account;
 import hu.kits.wallet.domain.Purchase.Category;
@@ -17,16 +17,16 @@ public class PurchaseData {
     private String shop;
     private String subject;
     private String comment;
-    private List<Photo> photos;
+    private List<File> files;
     
     public PurchaseData() {
     }
     
     public PurchaseData(Purchase purchase) {
-        this(purchase.account(), purchase.date(), purchase.amount(), purchase.category(), purchase.shop(), purchase.subject(), purchase.comment(), purchase.photos());
+        this(purchase.account(), purchase.date(), purchase.amount(), purchase.category(), purchase.shop(), purchase.subject(), purchase.comment(), purchase.files());
     }
     
-    public PurchaseData(Account account, LocalDate date, int amount, Category category, String shop, String subject, String comment, List<Photo> photos) {
+    public PurchaseData(Account account, LocalDate date, int amount, Category category, String shop, String subject, String comment, List<File> files) {
         this.account = account;
         this.date = date;
         this.amount = amount;
@@ -34,12 +34,12 @@ public class PurchaseData {
         this.shop = shop;
         this.subject = subject;
         this.comment = comment;
-        this.photos = photos;
+        this.files = files;
     }
     
     public Purchase toPurchase(Long id) {
-        List<Photo> photos = this.photos != null ? this.photos : List.of();
-        return new Purchase(id, account, date, (int)amount, category, shop, subject, comment, photos, null);
+        List<File> files = this.files != null ? this.files : List.of();
+        return new Purchase(id, account, date, (int)amount, category, shop, subject, comment, files, null);
     }
     
     public Account getAccount() {
@@ -98,12 +98,12 @@ public class PurchaseData {
         this.comment = comment;
     }
 
-    public List<Photo> getPhotos() {
-        return photos;
+    public List<File> getFiles() {
+        return files;
     }
 
-    public void setPhotos(List<Photo> photos) {
-        this.photos = photos;
+    public void setPhotos(List<File> files) {
+        this.files = files;
     }
     
 }

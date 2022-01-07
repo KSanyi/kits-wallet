@@ -15,7 +15,7 @@ public record Purchase(Long id,
         String shop,
         String subject,
         String comment, 
-        List<Photo> photos,
+        List<File> files,
         LocalDateTime timestamp) implements Comparable<Purchase> {
 
     public static enum Account {
