@@ -14,7 +14,6 @@ import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.IronIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -172,19 +171,19 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
         amountField.setClearButtonVisible(true);
         amountField.addFocusListener(e -> amountField.clear());
         
-        saveButton.setIcon(new IronIcon("lumo", "checkmark"));
+        saveButton.setIcon(new Icon("lumo", "checkmark"));
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         saveButton.setHeight("50px");
         
-        cancelButton.setIcon(new IronIcon("lumo", "cross"));
+        cancelButton.setIcon(new Icon("lumo", "cross"));
         cancelButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
         
-        duplicateButton.setIcon(new IronIcon("lumo", "reload"));
+        duplicateButton.setIcon(new Icon("lumo", "reload"));
         duplicateButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
         duplicateButton.setVisible(false);
         duplicateButton.setHeight("50px");
         
-        deleteButton.setIcon(new IronIcon("lumo", "cross"));
+        deleteButton.setIcon(new Icon("lumo", "cross"));
         deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
         deleteButton.setVisible(false);
         

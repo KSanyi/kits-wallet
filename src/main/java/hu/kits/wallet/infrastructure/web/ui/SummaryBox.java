@@ -57,7 +57,7 @@ class SummaryBox extends VerticalLayout {
         grid.addColumn(TemplateRenderer.<Pair<String, Integer>>of(amountTemplate).withProperty("amount", pair -> Formatters.formatAmount(pair.second) + " Ft"));
         
         grid.setItems(entries);
-        grid.setHeightByRows(true);
+        grid.setAllRowsVisible(true);
         grid.setSelectionMode(SelectionMode.NONE);
         
         return grid;

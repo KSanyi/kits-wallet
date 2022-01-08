@@ -49,6 +49,7 @@ dependencies:
   '@vaadin/vaadin-time-picker': 21.0.5
   '@vaadin/vaadin-upload': 21.0.5
   '@vaadin/vaadin-virtual-list': 21.0.5
+  cleave.js: 1.6.0
   construct-style-sheets-polyfill: 3.0.4
   lit: 2.0.0
 devDependencies:
@@ -3254,6 +3255,10 @@ packages:
       node: '>=6'
     resolution:
       integrity: sha512-4diC9HaTE+KRAMWhDhrGOECgWZxoevMc5TlkObMqNSsVU62PYzXZ/SMTjzyGAFF1YusgxGcSWTEXBhp0CPwQ1A==
+  /cleave.js/1.6.0:
+    dev: false
+    resolution:
+      integrity: sha512-ivqesy3j5hQVG3gywPfwKPbi/7ZSftY/UNp5uphnqjr25yI2CP8FS2ODQPzuLXXnNLi29e2+PgPkkiKUXLs/Nw==
   /cliui/5.0.0:
     dependencies:
       string-width: 3.1.0
@@ -8323,6 +8328,7 @@ specifiers:
   '@vaadin/vaadin-upload': 21.0.5
   '@vaadin/vaadin-virtual-list': 21.0.5
   chokidar: ^3.5.0
+  cleave.js: 1.6.0
   compression-webpack-plugin: 4.0.1
   construct-style-sheets-polyfill: 3.0.4
   css-loader: 4.2.1

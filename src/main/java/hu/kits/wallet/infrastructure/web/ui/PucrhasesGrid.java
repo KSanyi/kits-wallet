@@ -4,7 +4,6 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.icon.IronIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
@@ -51,18 +50,15 @@ class PucrhasesGrid extends Grid<Purchase> {
         footer.setSpacing(false);
         footer.getThemeList().add("spacing-s");
 
-        IronIcon shopIcon = new IronIcon("vaadin", "heart");
         Span shop = new Span(purchase.shop());
-        shop.addClassName("likes");
         
         Span date = new Span(Formatters.formatDate(purchase.date()));
         date.addClassName("comments");
 
-        IronIcon categoryIcon = new IronIcon("vaadin", "heart");
         Span category = new Span(purchase.category().name());
         category.addClassName("likes");
         
-        footer.add(shopIcon, shop, date, categoryIcon, category);
+        footer.add(shop, date, category);
 
         description.add(header, comment, footer);
         

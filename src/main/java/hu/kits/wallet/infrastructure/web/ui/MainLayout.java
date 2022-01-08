@@ -10,7 +10,7 @@ import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.JsModule;
-import com.vaadin.flow.component.icon.IronIcon;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.PreserveOnRefresh;
@@ -49,7 +49,7 @@ public class MainLayout extends AppLayout {
     }
     
     private Button createNewPurchaseButton() {
-        Button newPurchaseButton = new Button("Vásárlás", new IronIcon("lumo", "plus"));
+        Button newPurchaseButton = new Button("Vásárlás", new Icon("lumo", "plus"));
         newPurchaseButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         newPurchaseButton.addClickListener(click -> getUI().ifPresent(ui -> ui.navigate(PurchaseView.class)));
         return newPurchaseButton;

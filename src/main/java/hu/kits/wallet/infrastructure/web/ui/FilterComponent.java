@@ -1,7 +1,7 @@
 package hu.kits.wallet.infrastructure.web.ui;
 
 import com.vaadin.flow.component.html.H5;
-import com.vaadin.flow.component.icon.IronIcon;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
@@ -15,7 +15,7 @@ class FilterComponent extends VerticalLayout {
     private final DateFilter dateFilter = new DateFilter();
     
     FilterComponent() {
-        filterTextField.setPrefixComponent(new IronIcon("lumo", "search"));
+        filterTextField.setPrefixComponent(new Icon("lumo", "search"));
         filterTextField.setValueChangeMode(ValueChangeMode.EAGER);
         filterTextField.setClearButtonVisible(true);
         filterTextField.setWidth("220px");
