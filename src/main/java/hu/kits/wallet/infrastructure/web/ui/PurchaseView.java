@@ -5,6 +5,7 @@ import java.time.temporal.ChronoUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.vaadin.textfieldformatter.NumeralFieldFormatter;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -12,12 +13,13 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.IronIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
@@ -43,7 +45,7 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
     private final ComboBox<String> subjectCombo = new ComboBox<>("Tárgy");
     private final ComboBox<Category> categoryCombo = new ComboBox<>("Kategória", Category.values());
     private final ComboBox<Account> accountCombo = new ComboBox<>("Account", Account.values());
-    private final NumberField amountField = new NumberField("Összeg");
+    private final TextField amountField = new TextField("Összeg");
     private final TextArea commentField = new TextArea("Megjegyzés");
     private final PhotosComponent photosComponent = new PhotosComponent("Fényképek");
     private final Div lastPurchaseForShopLabel = new Div();
@@ -96,10 +98,13 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
         binder.forField(subjectCombo).asRequired("Nem lehet üres").bind("subject");
         binder.forField(categoryCombo).asRequired("Nem lehet üres").bind("category");
         binder.forField(accountCombo).asRequired("Nem lehet üres").bind("account");
-        binder.forField(amountField).asRequired("Nem lehet üres").bind("amount");
         binder.forField(commentField).bind("comment");
-        binder.forField(photosComponent).bind("photos");
+        binder.forField(photosComponent).bind("files");
         
+        binder.forField(amountField)
+            .withConverter(new FormattedStringToIntegerConverter())
+            .asRequired("Nem lehet üres")
+            .bind("amount");
     }
     
     private void save() {
@@ -147,7 +152,7 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
         accountCombo.setValue(purchases.finAccount(shop));
         categoryCombo.setValue(purchases.findCategory(shop));
         subjectCombo.setValue(purchases.findMostCommonSubjectFor(shop));
-        amountField.setValue((double)purchases.findMostCommonAmountFor(shop));
+        amountField.setValue(String.valueOf(purchases.findMostCommonAmountFor(shop)));
     }
     
     private static PurchaseRepository purchaseRepository() {
@@ -158,8 +163,10 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
         setDefaultHorizontalComponentAlignment(Alignment.STRETCH);
         setSpacing(false);
         
+        new NumeralFieldFormatter(String.valueOf(FormattedStringToIntegerConverter.NUMBER_GROUPING_SEPARATOR), ".", 0).extend(amountField);
+        amountField.setLabel("Összeg");
         amountField.setWidth("150px");
-        amountField.setPattern("[0-9]*");
+        //amountField.setPattern("[0-9]*");
         amountField.setPreventInvalidInput(true);
         amountField.setSuffixComponent(new Span("Ft"));
         amountField.setClearButtonVisible(true);

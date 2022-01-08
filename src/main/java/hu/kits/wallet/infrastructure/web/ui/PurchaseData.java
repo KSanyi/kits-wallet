@@ -12,7 +12,7 @@ public class PurchaseData {
 
     private Account account;
     private LocalDate date;
-    private double amount;
+    private int amount;
     private Category category;
     private String shop;
     private String subject;
@@ -58,11 +58,11 @@ public class PurchaseData {
         this.date = date;
     }
     
-    public double getAmount() {
+    public int getAmount() {
         return amount;
     }
     
-    public void setAmount(double amount) {
+    public void setAmount(int amount) {
         this.amount = amount;
     }
     
