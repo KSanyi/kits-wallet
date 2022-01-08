@@ -98,7 +98,7 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
         binder.forField(accountCombo).asRequired("Nem lehet üres").bind("account");
         binder.forField(amountField).asRequired("Nem lehet üres").bind("amount");
         binder.forField(commentField).bind("comment");
-        binder.forField(photosComponent).bind("photos");
+        binder.forField(photosComponent).bind("files");
         
     }
     
