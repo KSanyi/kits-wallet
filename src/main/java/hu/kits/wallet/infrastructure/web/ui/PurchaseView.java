@@ -165,7 +165,7 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
         new NumeralFieldFormatter(String.valueOf(FormattedStringToIntegerConverter.NUMBER_GROUPING_SEPARATOR), ".", 0).extend(amountField);
         amountField.setLabel("Összeg");
         amountField.setWidth("150px");
-        //amountField.setPattern("[0-9]*");
+        amountField.setPattern("[0-9 ]*");
         amountField.setPreventInvalidInput(true);
         amountField.setSuffixComponent(new Span("Ft"));
         amountField.setClearButtonVisible(true);
