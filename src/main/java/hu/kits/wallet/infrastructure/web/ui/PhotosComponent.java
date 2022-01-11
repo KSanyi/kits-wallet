@@ -55,6 +55,7 @@ public class PhotosComponent extends CustomField<List<File>> {
             }
             
             fileStorage.saveFile(fileId, bytes);
+            changeHappened();
         });
                 
         mainLayout.add(upload);
