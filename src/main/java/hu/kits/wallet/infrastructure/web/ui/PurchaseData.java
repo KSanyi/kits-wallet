@@ -102,7 +102,7 @@ public class PurchaseData {
         return files;
     }
 
-    public void setPhotos(List<File> files) {
+    public void setFiles(List<File> files) {
         this.files = files;
     }
     

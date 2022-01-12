@@ -46,7 +46,7 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
     private final ComboBox<Account> accountCombo = new ComboBox<>("Account", Account.values());
     private final TextField amountField = new TextField("Összeg");
     private final TextArea commentField = new TextArea("Megjegyzés");
-    private final PhotosComponent photosComponent = new PhotosComponent("Fényképek");
+    private final FilesComponent photosComponent = new FilesComponent("Fényképek");
     private final Div lastPurchaseForShopLabel = new Div();
     
     private final Button saveButton = new Button("Mentés", click -> save());

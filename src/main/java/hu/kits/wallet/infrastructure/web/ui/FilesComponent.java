@@ -26,7 +26,7 @@ import hu.kits.wallet.Main;
 import hu.kits.wallet.domain.FileStorage;
 import hu.kits.wallet.domain.File;
 
-public class PhotosComponent extends CustomField<List<File>> {
+public class FilesComponent extends CustomField<List<File>> {
 
     private final List<File> files = new ArrayList<>();
     
@@ -34,7 +34,7 @@ public class PhotosComponent extends CustomField<List<File>> {
     
     private final FileStorage fileStorage = Main.fileStorage;
     
-    public PhotosComponent(String title) {
+    public FilesComponent(String title) {
         add(new H4(title), mainLayout);
         
         MemoryBuffer buffer = new MemoryBuffer();
@@ -55,7 +55,6 @@ public class PhotosComponent extends CustomField<List<File>> {
             }
             
             fileStorage.saveFile(fileId, bytes);
-            changeHappened();
         });
                 
         mainLayout.add(upload);
