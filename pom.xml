@@ -4,7 +4,7 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>hu.bankmonitor</groupId>
+    <groupId>hu.kits</groupId>
     <artifactId>kits-wallet</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
@@ -13,11 +13,11 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>17</java.version>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <java.version>18</java.version>
+        <maven.compiler.source>18</maven.compiler.source>
+        <maven.compiler.target>18</maven.compiler.target>
 
-        <vaadin.version>21.0.9</vaadin.version>
+        <vaadin.version>23.1.0</vaadin.version>
         <jetty.version>9.4.44.v20210927</jetty.version>
     </properties>
 
@@ -46,12 +46,6 @@
             <groupId>com.vaadin</groupId>
             <!-- Replace artifactId with vaadin-core to use only free components -->
             <artifactId>vaadin</artifactId>
-        </dependency>
-
-        <dependency>
-           <groupId>org.vaadin</groupId>
-           <artifactId>textfieldformatter</artifactId>
-           <version>5.3.0</version>
         </dependency>
 
         <dependency>
@@ -159,7 +153,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
-                    <release>17</release>
+                    <release>18</release>
                 </configuration>
             </plugin>
             <plugin>

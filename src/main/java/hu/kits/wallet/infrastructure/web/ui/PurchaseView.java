@@ -5,7 +5,6 @@ import java.time.temporal.ChronoUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vaadin.textfieldformatter.NumeralFieldFormatter;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -162,7 +161,6 @@ public class PurchaseView extends VerticalLayout implements HasUrlParameter<Long
         setDefaultHorizontalComponentAlignment(Alignment.STRETCH);
         setSpacing(false);
         
-        new NumeralFieldFormatter(String.valueOf(FormattedStringToIntegerConverter.NUMBER_GROUPING_SEPARATOR), ".", 0).extend(amountField);
         amountField.setLabel("Összeg");
         amountField.setWidth("150px");
         amountField.setPattern("[0-9]*");
